@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "223387549077",
+    "project_id": "spotring-3bdab",
+    "storage_bucket": "spotring-3bdab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223387549077:android:d65951462f6d90c1ddca9c",
+        "android_client_info": {
+          "package_name": "ttit.com.shuvo.spotring"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqGzMe_9cfz4NdRITemTke9iogShGJIIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

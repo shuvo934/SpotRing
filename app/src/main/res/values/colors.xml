@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="belize_hole_previous">#2980b9</color>
+    <color name="belize_hole">#2056AF</color>
+    <color name="belize_hole_a">#102980b9</color>
+    <color name="belize_hole_a_b">#802980b9</color>
+    <color name="peter_river">#3498db</color>
+    <color name="nephritis">#27ae60</color>
+    <color name="green_sea">#16a085</color>
+    <color name="midnight_blue">#2c3e50</color>
+    <color name="concrete">#95a5a6</color>
+    <color name="clouds">#ecf0f1</color>
+    <color name="default_text_color">#6C6E6F</color>
+    <color name="smoothing_breeze">#b2bec3</color>
+    <color name="mtrl_textinput_default_box_stroke_color"
+        tools:override="true">#2980b9</color>
+</resources>

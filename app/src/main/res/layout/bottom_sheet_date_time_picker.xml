@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusableInTouchMode="false"
+    android:background="@drawable/bottom_sheet_design"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SET DATE RANGE"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/belize_hole"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:textSize="@dimen/_11sdp"
+            tools:ignore="HardcodedText" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/date_range_activation_switch"
+            android:layout_width="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/date_range_selection_layout_date_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        app:boxCornerRadiusTopStart="@dimen/_8sdp"
+        app:boxCornerRadiusTopEnd="@dimen/_8sdp"
+        app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
+        app:boxCornerRadiusBottomStart="@dimen/_8sdp"
+        app:boxStrokeWidthFocused="2dp"
+        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeWidth="1dp"
+        app:boxStrokeColor="@color/midnight_blue"
+        app:helperTextEnabled="true"
+        app:startIconDrawable="@drawable/calendar_icon"
+        app:startIconTint="@color/belize_hole"
+        android:textColorHint="@color/belize_hole"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="Date Range"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        tools:ignore="HardcodedText">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/date_range_selection_date_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:ems="10"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:gravity="center|start"
+            android:fontFamily="@font/poppins_bold"
+            android:maxLines="3"
+            android:textSize="@dimen/_10sdp"
+            android:textColor="@color/black"
+            android:imeOptions="actionDone" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SET TIME RANGE"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/belize_hole"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:textSize="@dimen/_11sdp"
+            tools:ignore="HardcodedText" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/time_range_activation_switch"
+            android:layout_width="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/time_range_picker_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <nl.joery.timerangepicker.TimeRangePicker
+            android:id="@+id/single_date_time_picker"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:trp_thumbIconEnd="@drawable/access_time_filled"
+            app:trp_thumbIconStart="@drawable/access_time_filled"
+            app:trp_sliderWidth="@dimen/_10sdp"
+            app:trp_sliderRangeGradientStart="@color/belize_hole"
+            app:trp_sliderRangeGradientMiddle="@color/belize_hole"
+            app:trp_sliderRangeGradientEnd="@color/midnight_blue" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/start_time_in_time_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Time\n03:00 PM"
+                android:gravity="center"
+                android:fontFamily="@font/poppins_medium"
+                android:textColor="@color/belize_hole"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:textSize="@dimen/_10sdp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/end_time_in_time_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Time\n09:00 PM"
+                android:gravity="center"
+                android:fontFamily="@font/poppins_medium"
+                android:textColor="@color/belize_hole"
+                android:textSize="@dimen/_10sdp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancel_date_time_selection_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="Cancel"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins_medium"
+            app:cornerRadius="@dimen/_10sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:backgroundTint="@color/smoothing_breeze"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/date_time_selection_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="OK"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins_medium"
+            app:cornerRadius="@dimen/_10sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:backgroundTint="@color/belize_hole"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+</LinearLayout>

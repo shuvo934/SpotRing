@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet_drop_down_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_4sdp"
+    android:layout_marginStart="@dimen/_8sdp"
+    android:layout_marginEnd="@dimen/_8sdp"
+    android:layout_marginBottom="@dimen/_4sdp"
+    app:cardCornerRadius="@dimen/_8sdp"
+    android:descendantFocusability="blocksDescendants"
+    app:cardElevation="1dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/bottom_sheet_border_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bottom_sheet_border_not_selected">
+
+        <TextView
+            android:id="@+id/drop_down_item_in_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Laundry"
+            android:gravity="center|start"
+            android:textSize="@dimen/_10sdp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_bold"
+            android:padding="@dimen/_8sdp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/drop_down_item_layout_in_bottom_sheet"
+            tools:ignore="HardcodedText" />
+
+<!--        <TextView-->
+<!--            android:id="@+id/drop_down_item_extra_in_bottom_sheet"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="extra_text"-->
+<!--            android:gravity="center|start"-->
+<!--            android:textSize="@dimen/_9sdp"-->
+<!--            android:textColor="@color/default_text_color"-->
+<!--            android:fontFamily="@font/poppins_bold"-->
+<!--            android:paddingStart="@dimen/_8sdp"-->
+<!--            android:paddingEnd="@dimen/_8sdp"-->
+<!--            android:paddingBottom="@dimen/_8sdp"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_below="@+id/drop_down_item_in_bottom_sheet"-->
+<!--            android:layout_toStartOf="@+id/drop_down_item_layout_in_bottom_sheet"/>-->
+
+        <ImageView
+            android:id="@+id/drop_down_item_layout_in_bottom_sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/done_24"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_centerVertical="true"
+            tools:ignore="ContentDescription" />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

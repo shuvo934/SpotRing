@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">SpotRing</string>
+    <string name="registration">REGISTRATION</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_mail">Email</string>
+    <string name="hint_phone">Mobile No</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="button_register">Register</string>
+    <string name="remember_text">Remember Me</string>
+    <string name="password_not_match">The User Name and Password did not match</string>
+    <string name="login_text">Login</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="notify_channel">GEOFENCE_NOTIFY</string>
+</resources>

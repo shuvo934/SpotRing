@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/custom_data_card_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/_8sdp"
+    app:cardElevation="@dimen/_3sdp"
+    android:layout_margin="@dimen/_5sdp"
+    android:foreground="?attr/selectableItemBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/custom_repeat_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Custom Repetition Info"
+            android:fontFamily="@font/poppins_bold"
+            android:textSize="@dimen/_9sdp"
+            android:paddingStart="@dimen/_3sdp"
+            android:paddingEnd="@dimen/_3sdp"
+            android:layout_margin="@dimen/_6sdp"
+            android:layout_alignParentStart="false"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/custom_repeat_delete"
+            android:textColor="@color/black"
+            tools:ignore="HardcodedText" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/custom_repeat_delete"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingLeft="0dp"
+            android:paddingBottom="2dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            app:icon="@drawable/delete_24"
+            app:iconTint="@color/white"
+            app:iconSize="@dimen/_18sdp"
+            app:iconPadding="0dp"
+            app:iconGravity="textStart"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/_6sdp"
+            app:cornerRadius="10dp"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
+
