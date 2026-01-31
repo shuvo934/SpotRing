@@ -3,7 +3,7 @@ agp = "8.11.0"
 circleimageview = "3.1.0"
 compiler = "4.13.2"
 firebaseBom = "33.3.0"
-fotoapparat = "2.7.0"
+#fotoapparat = "2.7.0"
 glide = "4.13.2"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -20,14 +20,14 @@ firebaseFirestore = "25.1.0"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "19.0.0"
 timerangepicker = "1.0.0"
-ucrop = "2.2.10"
+#ucrop = "2.2.10"
 
 [libraries]
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
-fotoapparat = { module = "io.fotoapparat:fotoapparat", version.ref = "fotoapparat" }
+#fotoapparat = { module = "io.fotoapparat:fotoapparat", version.ref = "fotoapparat" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -42,7 +42,7 @@ sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdpAndroid
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 timerangepicker = { module = "nl.joery.timerangepicker:timerangepicker", version.ref = "timerangepicker" }
-ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
+#ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

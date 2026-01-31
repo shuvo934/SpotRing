@@ -202,7 +202,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         if (trigger_id.equals("1") || trigger_id.equals("4") || trigger_id.equals("5") || trigger_id.equals("7")) {
                                                             if (alarm_id.equals("1")) {
                                                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                                                         .setContentTitle("You have entered your Area for: " + event_name)
                                                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -211,7 +211,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                                 notificationManagerCompat.notify(1212, builder.build());
                                                             } else {
                                                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                                                         .setContentTitle("You have entered your Area for: " + event_name)
                                                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -235,7 +235,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         if (trigger_id.equals("2") || trigger_id.equals("4") || trigger_id.equals("6") || trigger_id.equals("7")) {
                                                             if (alarm_id.equals("1")) {
                                                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                                                         .setContentTitle("You have exited your Area for: " + event_name)
                                                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -244,7 +244,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                                 notificationManagerCompat.notify(1212, builder.build());
                                                             } else {
                                                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                                                         .setContentTitle("You have exited your Area for: " + event_name)
                                                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -268,7 +268,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         if (trigger_id.equals("3") || trigger_id.equals("5") || trigger_id.equals("6") || trigger_id.equals("7")) {
                                                             if (alarm_id.equals("1")) {
                                                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                                                         .setContentTitle("You are in your Area for: " + event_name)
                                                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -277,7 +277,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                                 notificationManagerCompat.notify(1212, builder.build());
                                                             } else {
                                                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                                                         .setContentTitle("You are in your Area for: " + event_name)
                                                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -307,7 +307,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                 if (trigger_id.equals("1") || trigger_id.equals("4") || trigger_id.equals("5") || trigger_id.equals("7")) {
                                                     if (alarm_id.equals("1")) {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You have entered your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -316,7 +316,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         notificationManagerCompat.notify(1212, builder.build());
                                                     } else {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You have entered your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -340,7 +340,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                 if (trigger_id.equals("2") || trigger_id.equals("4") || trigger_id.equals("6") || trigger_id.equals("7")) {
                                                     if (alarm_id.equals("1")) {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You have exited your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -349,7 +349,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         notificationManagerCompat.notify(1212, builder.build());
                                                     } else {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You have exited your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -373,7 +373,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                 if (trigger_id.equals("3") || trigger_id.equals("5") || trigger_id.equals("6") || trigger_id.equals("7")) {
                                                     if (alarm_id.equals("1")) {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You are in your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -382,7 +382,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         notificationManagerCompat.notify(1212, builder.build());
                                                     } else {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You are in your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -434,7 +434,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                 if (trigger_id.equals("1") || trigger_id.equals("4") || trigger_id.equals("5") || trigger_id.equals("7")) {
                                                     if (alarm_id.equals("1")) {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You have entered your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -443,7 +443,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         notificationManagerCompat.notify(1212, builder.build());
                                                     } else {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You have entered your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -467,7 +467,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                 if (trigger_id.equals("2") || trigger_id.equals("4") || trigger_id.equals("6") || trigger_id.equals("7")) {
                                                     if (alarm_id.equals("1")) {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You have exited your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -476,7 +476,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         notificationManagerCompat.notify(1212, builder.build());
                                                     } else {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You have exited your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -500,7 +500,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                 if (trigger_id.equals("3") || trigger_id.equals("5") || trigger_id.equals("6") || trigger_id.equals("7")) {
                                                     if (alarm_id.equals("1")) {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You are in your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -509,7 +509,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                                         notificationManagerCompat.notify(1212, builder.build());
                                                     } else {
                                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                                                .setSmallIcon(R.drawable.spot_ring_icon)
+                                                                .setSmallIcon(R.drawable.spotring_icon_new)
                                                                 .setContentTitle("You are in your Area for: " + event_name)
                                                                 .setContentText(notes.isEmpty() ? event_type : notes)
                                                                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -546,7 +546,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                         if (trigger_id.equals("1") || trigger_id.equals("4") || trigger_id.equals("5") || trigger_id.equals("7")) {
                             if (alarm_id.equals("1")) {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You have entered your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -555,7 +555,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                 notificationManagerCompat.notify(1212, builder.build());
                             } else {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You have entered your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -580,7 +580,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                         if (trigger_id.equals("2") || trigger_id.equals("4") || trigger_id.equals("6") || trigger_id.equals("7")) {
                             if (alarm_id.equals("1")) {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You have exited your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -589,7 +589,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                 notificationManagerCompat.notify(1212, builder.build());
                             } else {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You have exited your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -614,7 +614,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                         if (trigger_id.equals("3") || trigger_id.equals("5") || trigger_id.equals("6") || trigger_id.equals("7")) {
                             if (alarm_id.equals("1")) {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You are in your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -623,7 +623,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                 notificationManagerCompat.notify(1212, builder.build());
                             } else {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You are in your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -673,7 +673,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                         if (trigger_id.equals("1") || trigger_id.equals("4") || trigger_id.equals("5") || trigger_id.equals("7")) {
                             if (alarm_id.equals("1")) {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You have entered your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -682,7 +682,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                 notificationManagerCompat.notify(1212, builder.build());
                             } else {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You have entered your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -706,7 +706,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                         if (trigger_id.equals("2") || trigger_id.equals("4") || trigger_id.equals("6") || trigger_id.equals("7")) {
                             if (alarm_id.equals("1")) {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You have exited your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -715,7 +715,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                 notificationManagerCompat.notify(1212, builder.build());
                             } else {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You have exited your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -739,7 +739,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                         if (trigger_id.equals("3") || trigger_id.equals("5") || trigger_id.equals("6") || trigger_id.equals("7")) {
                             if (alarm_id.equals("1")) {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You are in your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -748,7 +748,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                                 notificationManagerCompat.notify(1212, builder.build());
                             } else {
                                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notify_channel))
-                                        .setSmallIcon(R.drawable.spot_ring_icon)
+                                        .setSmallIcon(R.drawable.spotring_icon_new)
                                         .setContentTitle("You are in your Area for: " + event_name)
                                         .setContentText(notes.isEmpty() ? event_type : notes)
                                         .setPriority(NotificationCompat.PRIORITY_HIGH);

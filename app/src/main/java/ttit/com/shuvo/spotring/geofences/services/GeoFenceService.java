@@ -115,7 +115,7 @@ public class GeoFenceService extends Service {
         return new NotificationCompat.Builder(this, getString(R.string.notify_channel))
                 .setContentTitle(tr_ty +": "+ev_name)
                 .setContentText(ev_notes.isEmpty() ? ev_type : ev_notes)
-                .setSmallIcon(R.drawable.spot_ring_icon)
+                .setSmallIcon(R.drawable.spotring_icon_new)
                 .addAction(R.drawable.ic_stop_circle, "STOP", stopPendingIntent) // STOP button
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)

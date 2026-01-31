@@ -9,11 +9,17 @@
         <include .../>
         <exclude .../>
         -->
+        <exclude domain="sharedpref" path="UserPassSPOTRING.xml" />
+        <exclude domain="sharedpref" path="LOGIN_FILE_SPOT_RING.xml" />
     </cloud-backup>
-    <!--
+
     <device-transfer>
+        <!--
         <include .../>
         <exclude .../>
+        -->
+        <exclude domain="sharedpref" path="UserPassSPOTRING.xml" />
+        <exclude domain="sharedpref" path="LOGIN_FILE_SPOT_RING.xml" />
     </device-transfer>
-    -->
+
 </data-extraction-rules>

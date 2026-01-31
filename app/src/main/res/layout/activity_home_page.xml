@@ -38,7 +38,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:src="@drawable/spot_ring_icon"
+                android:src="@drawable/spotring_icon_new"
                 tools:ignore="ContentDescription" />
 
 
@@ -71,6 +71,24 @@
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/bannerNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Note: If you restart your device or reinstall the app, GeoFence events will not work until you update the event again."
+            android:textSize="@dimen/_11sdp"
+            android:background="#E3F2FD"
+            android:textColor="#0D47A1"
+            android:padding="10dp"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            tools:ignore="HardcodedText" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -6,12 +6,35 @@
     android:background="@drawable/splash_screen_without_icon"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="@dimen/_200sdp"
-        android:src="@drawable/spot_ring_icon"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        tools:ignore="ContentDescription" />
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/main_image_icon"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_180sdp"
+            android:src="@drawable/spotring_icon_new"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowDx="5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
+            android:textSize="@dimen/_30sdp"/>
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

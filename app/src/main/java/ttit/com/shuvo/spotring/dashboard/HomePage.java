@@ -33,6 +33,7 @@ import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_PASSWORD;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_PHONE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_SUBSCRIBE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_TABLE_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.LOGIN_ACTIVITY_FILE;
 import static ttit.com.shuvo.spotring.utilities.Constants.LOGIN_TF;
 
@@ -42,16 +43,13 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,7 +67,6 @@ import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,7 +75,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -107,11 +103,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.yalantis.ucrop.UCrop;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -119,15 +111,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import ttit.com.shuvo.spotring.R;
 import ttit.com.shuvo.spotring.dashboard.adapters.SavedLocationAdapter;
-import ttit.com.shuvo.spotring.dashboard.interfaces.PictureChooseListener;
 import ttit.com.shuvo.spotring.dashboard.model.SavedLocationList;
-import ttit.com.shuvo.spotring.dashboard.user_image_preview.BitmapCallBack;
-import ttit.com.shuvo.spotring.dashboard.user_image_preview.CameraPreview;
 import ttit.com.shuvo.spotring.databinding.ActivityHomePageBinding;
 import ttit.com.shuvo.spotring.geofences.AddGeoFences;
 import ttit.com.shuvo.spotring.geofences.model.CustomRepetitionDataList;
@@ -135,7 +122,7 @@ import ttit.com.shuvo.spotring.geofences.model.DocumentDeleteList;
 import ttit.com.shuvo.spotring.user_auth.UserLogin;
 import ttit.com.shuvo.spotring.user_auth.model.UserInfoList;
 
-public class HomePage extends AppCompatActivity implements PictureChooseListener, BitmapCallBack, OnMapReadyCallback, View.OnTouchListener, SavedLocationAdapter.ClickedMap, SavedLocationAdapter.ClickedEvent, SavedLocationAdapter.ClickedSwitch, SavedLocationAdapter.ClickedDelete {
+public class HomePage extends AppCompatActivity implements OnMapReadyCallback, View.OnTouchListener, SavedLocationAdapter.ClickedMap, SavedLocationAdapter.ClickedEvent, SavedLocationAdapter.ClickedSwitch, SavedLocationAdapter.ClickedDelete {
 
     LinearLayout fullLayout;
     CircularProgressIndicator circularProgressIndicator;
@@ -187,9 +174,7 @@ public class HomePage extends AppCompatActivity implements PictureChooseListener
     ArrayList<DocumentDeleteList> deleteLists;
     boolean fromLogin = false;
 
-//    Bitmap selectedBitmap;
-
-    Logger logger = Logger.getLogger(HomePage.class.getName());
+    TextView bannerNote;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -213,6 +198,8 @@ public class HomePage extends AppCompatActivity implements PictureChooseListener
         userImage = binding.userImage;
         profileName = binding.profileName;
         logOut = binding.logOutIconHomepage;
+
+        bannerNote = binding.bannerNote;
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.location_map);
@@ -282,6 +269,7 @@ public class HomePage extends AppCompatActivity implements PictureChooseListener
         p_name = userInfoLists.get(0).getP_name();
         p_phone = userInfoLists.get(0).getP_phone();
         profileName.setText(p_name);
+        bannerNote.setSelected(true);
 
         screenChanger.setOnClickListener(view -> {
             if (!fullScreen) {
@@ -459,22 +447,6 @@ public class HomePage extends AppCompatActivity implements PictureChooseListener
 //        });
 
     }
-
-    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                if (uri != null) {
-                    try {
-                        startCrop(uri);
-
-                    } catch (Exception e) {
-                        logger.log(Level.WARNING,e.getMessage(),e);
-                        Toast.makeText(getApplicationContext(),"Failed to upload image",Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),"Failed to get image",Toast.LENGTH_SHORT).show();
-                }
-            });
 
 //    private boolean checkExactAlarmPermission() {
 //        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -1044,14 +1016,66 @@ public class HomePage extends AppCompatActivity implements PictureChooseListener
         savedLocationLists = new ArrayList<>();
 
         FirebaseFirestore cloudDatabase = FirebaseFirestore.getInstance();
+
+        System.out.println(p_phone);
+        cloudDatabase.collection(KEY_USER_TABLE_NAME)
+                .whereEqualTo(KEY_USER_PHONE, p_phone)
+                .get()
+                .addOnSuccessListener(task -> {
+                    conn = true;
+                    connected = true;
+                    if (task.getDocuments().isEmpty()) {
+                        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(this);
+                        alertDialogBuilder.setTitle("No User Found!")
+                                .setMessage("We have not found any user according to this credential. Please login again to continue. If you have any activated Event then please reactivate again,")
+                                .setPositiveButton("OK", (dialog, which) -> {
+                                    userInfoLists.clear();
+                                    userInfoLists = new ArrayList<>();
+
+                                    SharedPreferences.Editor editor1 = sharedPreferences.edit();
+                                    editor1.remove(KEY_USER_NAME);
+                                    editor1.remove(KEY_USER_PHONE);
+                                    editor1.remove(KEY_USER_EMAIL);
+                                    editor1.remove(KEY_USER_PASSWORD);
+                                    editor1.remove(KEY_USER_ID);
+                                    editor1.remove(KEY_USER_SUBSCRIBE);
+                                    editor1.remove(KEY_USER_EVENT_COUNT);
+                                    editor1.remove(LOGIN_TF);
+                                    editor1.apply();
+                                    editor1.commit();
+
+                                    Intent intent = new Intent(HomePage.this, UserLogin.class);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                    finish();
+
+                                });
+
+                        AlertDialog alert = alertDialogBuilder.create();
+                        alert.setCancelable(false);
+                        alert.setCanceledOnTouchOutside(false);
+                        alert.show();
+                    }
+                    else {
+                        fetchLocationData(cloudDatabase);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    System.out.println("FAILED");
+                    conn = false;
+                    connected = false;
+                    parsing_message = e.getLocalizedMessage();
+                    updateLayout();
+                });
+    }
+
+    private void fetchLocationData(FirebaseFirestore cloudDatabase) {
         cloudDatabase.collection(KEY_LOC_TABLE_NAME)
                 .whereEqualTo(KEY_GEO_USER_NAME, p_phone)
                 .orderBy(KEY_GEO_UPDATE_DATE, Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(task -> {
-                    System.out.println("COMPLETED");
                     conn = true;
-                    System.out.println("SUCCESS");
                     connected = true;
                     if (!task.getDocuments().isEmpty()) {
                         List<DocumentSnapshot> documentSnapshots = task.getDocuments();
@@ -1082,7 +1106,6 @@ public class HomePage extends AppCompatActivity implements PictureChooseListener
                     checkToGetTime();
                 })
                 .addOnFailureListener(e -> {
-                    System.out.println("FAILED");
                     conn = false;
                     connected = false;
                     parsing_message = e.getLocalizedMessage();
@@ -1145,7 +1168,6 @@ public class HomePage extends AppCompatActivity implements PictureChooseListener
                     }
                 })
                 .addOnFailureListener(e -> {
-                    System.out.println("FAILED");
                     conn = false;
                     connected = false;
                     parsing_message = e.getLocalizedMessage();
@@ -1706,303 +1728,4 @@ public class HomePage extends AppCompatActivity implements PictureChooseListener
         alert.setCanceledOnTouchOutside(false);
         alert.show();
     }
-
-    @Override
-    public void onPictureChoose(int type) {
-        if (type == 1) {
-            Intent intent = new Intent(this, CameraPreview.class);
-            CameraPreview.setBitmapCallback(this);
-            startActivity(intent);
-        }
-        else if (type == 2) {
-            pickMedia.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                    .build());
-        }
-    }
-
-    @Override
-    public void onBitmapReceived(Bitmap bitmap) {
-        Uri uri = getImageUri(this,bitmap);
-        startCrop(uri);
-    }
-
-    private void startCrop(Uri sourceUri) {
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "cropped_image.jpg"));
-
-        UCrop.of(sourceUri, destinationUri)
-                //.withAspectRatio(1, 1)  // Optional: Set aspect ratio
-                .withMaxResultSize(1080, 1080) // Optional: Set max resolution
-                .start(this);
-    }
-
-    private Uri getImageUri(Context context, Bitmap bitmap) {
-        File file = new File(context.getCacheDir(), "temp_image.jpg"); // Store in cache
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-        } catch (IOException e) {
-            logger.log(Level.WARNING,e.getMessage(),e);
-        }
-        return FileProvider.getUriForFile(context, "ttit.com.shuvo.spotring.fileProvider", file);
-    }
-
-//    private Bitmap getCorrectlyOrientedBitmap(Uri uri) {
-//        try {
-//            InputStream inputStream = getContentResolver().openInputStream(uri);
-//            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//
-//            if (bitmap == null) {
-//                return null;
-//            }
-//
-//            // Get real file path (copying file if necessary)
-//            String realPath = copyFileToInternalStorage(uri);
-//
-//            // Read EXIF data
-//            if (realPath != null) {
-//                return modifyOrientation(bitmap, realPath);
-//            }
-//            else {
-//                return null;
-//            }
-//        }
-//        catch (IOException e) {
-//            logger.log(Level.WARNING,e.getMessage(),e);
-//            Toast.makeText(getApplicationContext(),"Failed to upload image",Toast.LENGTH_SHORT).show();
-//            return null;
-//        }
-//    }
-
-//    private String copyFileToInternalStorage(Uri uri) {
-//        File directory = getFilesDir(); // Internal storage
-//        File file = new File(directory, "temp_image.jpg");
-//
-//        try (InputStream inputStream = getContentResolver().openInputStream(uri);
-//             OutputStream outputStream = new FileOutputStream(file)) {
-//
-//            byte[] buffer = new byte[1024];
-//            int bytesRead;
-//            if (inputStream != null) {
-//                while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                    outputStream.write(buffer, 0, bytesRead);
-//                }
-//            }
-//
-//            return file.getAbsolutePath(); // Now you have the file path
-//
-//        } catch (IOException e) {
-//            logger.log(Level.WARNING,e.getMessage(),e);
-//            Toast.makeText(getApplicationContext(),"Failed to get image path",Toast.LENGTH_SHORT).show();
-//        }
-//        return null;
-//    }
-
-//    public static Bitmap modifyOrientation(Bitmap bitmap, String image_absolute_path) throws IOException {
-//        ExifInterface ei = new ExifInterface(image_absolute_path);
-//        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-//
-//        switch (orientation) {
-//            case ExifInterface.ORIENTATION_ROTATE_90:
-//                return rotate(bitmap, 90);
-//
-//            case ExifInterface.ORIENTATION_ROTATE_180:
-//                return rotate(bitmap, 180);
-//
-//            case ExifInterface.ORIENTATION_ROTATE_270:
-//                return rotate(bitmap, 270);
-//
-//            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
-//                return flip(bitmap, true, false);
-//
-//            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
-//                return flip(bitmap, false, true);
-//
-//            default:
-//                return bitmap;
-//        }
-//    }
-
-//    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-//        Matrix matrix = new Matrix();
-//        matrix.postRotate(degrees);
-//        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//    }
-
-//    public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
-//        Matrix matrix = new Matrix();
-//        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
-//        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//    }
-
-//    public Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
-//        int width = bitmap.getWidth();
-//        int height = bitmap.getHeight();
-//
-//        float scaleWidth = ((float) maxWidth) / width;
-//        float scaleHeight = ((float) maxHeight) / height;
-//        float scale = Math.min(scaleWidth, scaleHeight); // Maintain aspect ratio
-//
-//        int newWidth = Math.round(width * scale);
-//        int newHeight = Math.round(height * scale);
-//
-//        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-//    }
-
-//    public byte[] compressBitmap(Bitmap bitmap, int maxSizeKB) {
-//        int quality = 100; // Start at highest quality
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//
-//        do {
-//            outputStream.reset(); // Clear the stream
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-//            quality -= 5; // Reduce quality in steps of 5
-//        } while (outputStream.toByteArray().length / 1024 > maxSizeKB && quality > 5);
-//
-//        return outputStream.toByteArray();
-//    }
-
-//    public void updateUserImage(Uri imageUri) {
-//        circularProgressIndicator.setVisibility(View.VISIBLE);
-//        fullLayout.setVisibility(View.GONE);
-//        addLocation.setVisibility(View.GONE);
-//        conn = false;
-//        connected = false;
-//        loading = true;
-//
-//        selectedBitmap = resizeBitmap(selectedBitmap, 1080,1080);
-//        byte[] finalBArray = compressBitmap(selectedBitmap,1024);
-//
-//        FirebaseStorage storage = FirebaseStorage.getInstance();
-//        storage.setMaxUploadRetryTimeMillis(60000);
-//        StorageReference storageRef = storage.getReference().child("users/" + p_phone + "/profile.jpg");
-//
-//        Log.d("Upload", "URI: " + imageUri.toString());
-//        Log.d("Upload", "Path: users/" + p_phone + "/profile.jpg");
-//
-//        UploadTask uploadTask =  storageRef.putBytes(finalBArray);
-//        uploadTask.addOnSuccessListener(taskSnapshot -> {
-//                    // Get URL
-//                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-//                        String imageUrl = uri.toString();
-//                        saveImageUrlToFirestore(imageUrl,imageUri);
-//                    });
-//                })
-//                .addOnFailureListener(e -> {
-//                    conn = false;
-//                    connected = false;
-//                    parsing_message = e.getLocalizedMessage();
-//                    updateImageLayout(imageUri);
-//                });
-//
-//        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-//            if (!task.isSuccessful()) {
-//                throw Objects.requireNonNull(task.getException());
-//            }
-//            // Continue with the task to get the download URL
-//            return storageRef.getDownloadUrl();
-//        }).addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                Uri downloadUri = task.getResult();
-//                saveImageUrlToFirestore(downloadUri.toString(),imageUri);
-//            } else {
-//                conn = false;
-//                connected = false;
-//                parsing_message = "Failed to Upload Picture";
-//                updateImageLayout(imageUri);
-//            }
-//        });
-//    }
-
-//    private void saveImageUrlToFirestore(String imageUrl, Uri imageUri) {
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//        HashMap<String , Object> data = new HashMap<>();
-//        data.put(KEY_USER_IMAGE, imageUrl);
-//
-//        db.collection(KEY_USER_TABLE_NAME).whereEqualTo(KEY_GEO_USER_NAME,p_phone)
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().getDocuments().isEmpty()) {
-//                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-//
-//                        db.collection(KEY_USER_TABLE_NAME).document(documentSnapshot.getId())
-//                                .set(data, SetOptions.merge())
-//                                .addOnSuccessListener(unused -> {
-//                                    conn = true;
-//                                    connected = true;
-//                                    updateImageLayout(imageUri);
-//                                })
-//                                .addOnFailureListener(e -> {
-//                                    conn = false;
-//                                    connected = false;
-//                                    parsing_message = e.getLocalizedMessage();
-//                                    updateImageLayout(imageUri);
-//                                });
-//                    }
-//                    else {
-//                        conn = false;
-//                        connected = false;
-//                        parsing_message = "No Data Found. Please Try Again";
-//                        updateImageLayout(imageUri);
-//                    }
-//                })
-//                .addOnFailureListener(e -> {
-//                    conn = false;
-//                    connected = false;
-//                    parsing_message = e.getLocalizedMessage();
-//                    updateImageLayout(imageUri);
-//                });
-//
-//    }
-
-//    private void updateImageLayout(Uri imageUri) {
-//        loading = false;
-//        if (conn) {
-//            if (connected) {
-//                conn = false;
-//                connected = false;
-//
-//                Toast.makeText(getApplicationContext(), "Picture Uploaded", Toast.LENGTH_SHORT).show();
-//
-//                Glide.with(getApplicationContext())
-//                        .load(selectedBitmap)
-//                        .fitCenter()
-//                        .into(userImage);
-//
-//            }
-//            else {
-//                alertMessageImage(imageUri);
-//            }
-//        }
-//        else {
-//            alertMessageImage(imageUri);
-//        }
-//    }
-
-//    public void alertMessageImage(Uri imageUri) {
-//        fullLayout.setVisibility(View.VISIBLE);
-//        circularProgressIndicator.setVisibility(View.GONE);
-//        addLocation.setVisibility(View.VISIBLE);
-//        if (parsing_message != null) {
-//            if (parsing_message.isEmpty() || parsing_message.equals("null")) {
-//                parsing_message = "Server problem or Internet not connected";
-//            }
-//        }
-//        else {
-//            parsing_message = "Server problem or Internet not connected";
-//        }
-//        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(this);
-//        alertDialogBuilder.setTitle("Error!")
-//                .setMessage("Error Message: "+parsing_message+".\n"+"Please try again.")
-//                .setPositiveButton("Retry", (dialog, which) -> {
-//                    updateUserImage(imageUri);
-//                    dialog.dismiss();
-//                })
-//                .setNegativeButton("Cancel",(dialog, which) -> dialog.dismiss());
-//
-//        AlertDialog alert = alertDialogBuilder.create();
-//        alert.setCancelable(false);
-//        alert.setCanceledOnTouchOutside(false);
-//        alert.show();
-//    }
 }

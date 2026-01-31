@@ -51,7 +51,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/_8sdp"
-                android:src="@drawable/spot_ring_icon"
+                android:src="@drawable/spotring_icon_new"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -69,7 +69,8 @@
                 android:fontFamily="@font/poppins_bold"
                 android:text="ADD EVENT"
                 android:textColor="@color/belize_hole"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_14sdp"
+                tools:ignore="HardcodedText" />
 
         </RelativeLayout>
 
@@ -231,7 +232,8 @@
                             android:layout_margin="@dimen/_8sdp"
                             android:paddingBottom="@dimen/_5sdp"
                             android:textSize="@dimen/_10sdp"
-                            android:textColor="@color/belize_hole"/>
+                            android:textColor="@color/belize_hole"
+                            tools:ignore="HardcodedText" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="0dp"
@@ -320,7 +322,8 @@
                             android:layout_margin="@dimen/_8sdp"
                             android:paddingBottom="@dimen/_5sdp"
                             android:textSize="@dimen/_10sdp"
-                            android:textColor="@color/belize_hole"/>
+                            android:textColor="@color/belize_hole"
+                            tools:ignore="HardcodedText" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="0dp"
@@ -392,7 +395,8 @@
                             android:layout_margin="@dimen/_8sdp"
                             android:paddingBottom="@dimen/_5sdp"
                             android:textSize="@dimen/_10sdp"
-                            android:textColor="@color/belize_hole"/>
+                            android:textColor="@color/belize_hole"
+                            tools:ignore="HardcodedText" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/spinner_layout_event_type"
@@ -416,7 +420,8 @@
                             android:clickable="true"
                             android:focusable="false"
                             android:textColorHint="@color/belize_hole"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                            tools:ignore="KeyboardInaccessibleWidget">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/event_type_for_saving_geofences"
@@ -434,7 +439,8 @@
                                 android:textColor="@color/black"
                                 android:padding="@dimen/_8sdp"
                                 android:background="@null"
-                                android:imeOptions="actionDone"/>
+                                android:imeOptions="actionDone"
+                                tools:ignore="HardcodedText" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -488,7 +494,8 @@
                             android:layout_margin="@dimen/_8sdp"
                             android:paddingBottom="@dimen/_5sdp"
                             android:textSize="@dimen/_10sdp"
-                            android:textColor="@color/belize_hole"/>
+                            android:textColor="@color/belize_hole"
+                            tools:ignore="HardcodedText" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/spinner_layout_alert_type"
@@ -512,7 +519,8 @@
                             android:clickable="true"
                             android:focusable="false"
                             android:textColorHint="@color/belize_hole"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                            tools:ignore="KeyboardInaccessibleWidget">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/alert_type_for_saving_geofences"
@@ -530,7 +538,8 @@
                                 android:textColor="@color/black"
                                 android:padding="@dimen/_8sdp"
                                 android:background="@null"
-                                android:imeOptions="actionDone" />
+                                android:imeOptions="actionDone"
+                                tools:ignore="HardcodedText" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -584,7 +593,8 @@
                             android:layout_margin="@dimen/_8sdp"
                             android:paddingBottom="@dimen/_5sdp"
                             android:textSize="@dimen/_10sdp"
-                            android:textColor="@color/belize_hole"/>
+                            android:textColor="@color/belize_hole"
+                            tools:ignore="HardcodedText" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/spinner_layout_triggering_type"
@@ -608,7 +618,8 @@
                             android:clickable="true"
                             android:focusable="false"
                             android:textColorHint="@color/belize_hole"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                            tools:ignore="KeyboardInaccessibleWidget">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/triggering_type_for_saving_geofences"
@@ -681,7 +692,8 @@
                             android:layout_margin="@dimen/_8sdp"
                             android:paddingBottom="@dimen/_5sdp"
                             android:textSize="@dimen/_10sdp"
-                            android:textColor="@color/belize_hole"/>
+                            android:textColor="@color/belize_hole"
+                            tools:ignore="HardcodedText" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/spinner_layout_repetition_alert"
@@ -705,7 +717,8 @@
                             android:clickable="true"
                             android:focusable="false"
                             android:textColorHint="@color/belize_hole"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                            tools:ignore="KeyboardInaccessibleWidget">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/repetition_alert_for_saving_geofences"
@@ -789,7 +802,8 @@
                         android:textSize="@dimen/_9sdp"
                         android:layout_gravity="end"
                         android:layout_margin="@dimen/_5sdp"
-                        app:cornerRadius="@dimen/_5sdp"/>
+                        app:cornerRadius="@dimen/_5sdp"
+                        tools:ignore="HardcodedText" />
 
                 </LinearLayout>
 
@@ -858,7 +872,8 @@
                 android:text="ADD"
                 android:fontFamily="@font/poppins_bold"
                 app:cornerRadius="@dimen/_10sdp"
-                android:textSize="@dimen/_12sdp"/>
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/update_geofence_button"
@@ -874,7 +889,8 @@
                 android:visibility="gone"
                 android:fontFamily="@font/poppins_bold"
                 app:cornerRadius="@dimen/_10sdp"
-                android:textSize="@dimen/_12sdp"/>
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
     </RelativeLayout>

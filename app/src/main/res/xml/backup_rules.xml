@@ -10,4 +10,6 @@
    <include domain="sharedpref" path="."/>
    <exclude domain="sharedpref" path="device.xml"/>
 -->
+    <exclude domain="sharedpref" path="UserPassSPOTRING.xml" />
+    <exclude domain="sharedpref" path="LOGIN_FILE_SPOT_RING.xml" />
 </full-backup-content>

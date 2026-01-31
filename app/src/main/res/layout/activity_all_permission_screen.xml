@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".permission_checker.AllPermissionScreen">
+
+    <LinearLayout
+        android:id="@+id/app_bar_permissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_8sdp"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_1sdp"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Permission Manager"
+            android:textColor="@color/belize_hole"
+            android:textSize="@dimen/_14sdp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_1sdp"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_bold"
+            android:text="We need you to provide following permission to make the app functionable"
+            android:textColor="@color/default_text_color"
+            android:textSize="@dimen/_9sdp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/permission_encrypt_image"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:src="@drawable/encrypted"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_below="@+id/app_bar_permissions"
+        tools:ignore="ContentDescription" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_below="@+id/permission_encrypt_image"
+        android:layout_above="@+id/button_layout_next_step">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/foreground_loc_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/foreground_loc_activation_switch"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Foreground Location"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="To use location resources of your device while the app in use"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/default_text_color"
+                        android:textSize="@dimen/_9sdp"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/foreground_loc_activation_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/foreground_loc_activation_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:text="ENABLE"
+                        android:fontFamily="@font/carter_one"
+                        app:backgroundTint="@color/smoothing_breeze"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:paddingHorizontal="@dimen/_13sdp"
+                        app:cornerRadius="@dimen/_50sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/foreground_loc_activation_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="@dimen/_50sdp"
+                        android:visibility="gone"
+                        android:elevation="@dimen/_2sdp"
+                        app:cardBackgroundColor="@color/nephritis">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ENABLED"
+                            android:fontFamily="@font/carter_one"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:paddingVertical="@dimen/_7sdp"
+                            android:paddingHorizontal="@dimen/_13sdp"
+                            android:textSize="@dimen/_9sdp"
+                            tools:ignore="HardcodedText" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/background_loc_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/background_loc_activation_switch"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Background Location"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="To use location resources of your device while the app in background"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/default_text_color"
+                        android:textSize="@dimen/_9sdp"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/background_loc_activation_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/background_loc_activation_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:text="ENABLE"
+                        android:fontFamily="@font/carter_one"
+                        app:backgroundTint="@color/smoothing_breeze"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:paddingHorizontal="@dimen/_13sdp"
+                        app:cornerRadius="@dimen/_50sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/background_loc_activation_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="@dimen/_50sdp"
+                        android:elevation="@dimen/_2sdp"
+                        app:cardBackgroundColor="@color/nephritis">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ENABLED"
+                            android:fontFamily="@font/carter_one"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:paddingVertical="@dimen/_7sdp"
+                            android:paddingHorizontal="@dimen/_13sdp"
+                            android:textSize="@dimen/_9sdp"
+                            tools:ignore="HardcodedText" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/notification_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/notification_activation_switch"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Notification"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="To post notifications for GeoFencing alert"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/default_text_color"
+                        android:textSize="@dimen/_9sdp"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/notification_activation_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/notification_activation_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:text="ENABLE"
+                        android:fontFamily="@font/carter_one"
+                        app:backgroundTint="@color/smoothing_breeze"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:paddingHorizontal="@dimen/_13sdp"
+                        app:cornerRadius="@dimen/_50sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/notification_activation_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="@dimen/_50sdp"
+                        android:elevation="@dimen/_2sdp"
+                        app:cardBackgroundColor="@color/nephritis">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ENABLED"
+                            android:fontFamily="@font/carter_one"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:paddingVertical="@dimen/_7sdp"
+                            android:paddingHorizontal="@dimen/_13sdp"
+                            android:textSize="@dimen/_9sdp"
+                            tools:ignore="HardcodedText" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/display_over_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/display_over_activation_switch"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Display Over Other Apps"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="To use system settings of your device to make notification appear over the apps"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/default_text_color"
+                        android:textSize="@dimen/_9sdp"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/display_over_activation_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/display_over_activation_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:text="ENABLE"
+                        android:fontFamily="@font/carter_one"
+                        app:backgroundTint="@color/smoothing_breeze"
+                        android:textSize="@dimen/_9sdp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:paddingHorizontal="@dimen/_13sdp"
+                        app:cornerRadius="@dimen/_50sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/display_over_activation_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        app:cardCornerRadius="@dimen/_50sdp"
+                        android:elevation="@dimen/_2sdp"
+                        app:cardBackgroundColor="@color/nephritis">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ENABLED"
+                            android:fontFamily="@font/carter_one"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:paddingVertical="@dimen/_7sdp"
+                            android:paddingHorizontal="@dimen/_13sdp"
+                            android:textSize="@dimen/_9sdp"
+                            tools:ignore="HardcodedText" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/button_layout_next_step"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/next_step_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_4sdp"
+            android:enabled="false"
+            android:text="NEXT"
+            android:fontFamily="@font/poppins_bold"
+            app:cornerRadius="@dimen/_10sdp"
+            android:textSize="@dimen/_12sdp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -41,7 +41,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/_8sdp"
-            android:src="@drawable/spot_ring_icon"
+            android:src="@drawable/spotring_icon_new"
             tools:ignore="ContentDescription" />
 
         <TextView

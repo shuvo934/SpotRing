@@ -8,21 +8,12 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -33,7 +24,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SpotRing"
-        tools:targetApi="31">
+        tools:targetApi="33">
+        <activity
+            android:name=".permission_checker.AllPermissionScreen"
+            android:exported="false" />
         <activity
             android:name=".dashboard.user_image_preview.CameraPreview"
             android:exported="false" />
@@ -65,12 +59,6 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
-        <activity
             android:name=".dashboard.MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" />
@@ -100,7 +88,7 @@
 
         <service
             android:name=".geofences.services.GeoFenceService"
-            android:foregroundServiceType="mediaPlayback" />
+            android:foregroundServiceType="location" />
 
         <receiver
             android:name=".geofences.receiver.StopAlarmReceiver"
