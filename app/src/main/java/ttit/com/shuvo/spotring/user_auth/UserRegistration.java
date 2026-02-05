@@ -94,7 +94,7 @@ public class UserRegistration extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (!editable.toString().isEmpty()) {
-                    if (editable.toString().contains("@") && editable.toString().contains(".com")) {
+                    if (editable.toString().contains("@")) {
                         binding.userEmailRegistrationLay.setHelperText("");
                     }
                     else {
@@ -122,55 +122,6 @@ public class UserRegistration extends AppCompatActivity {
                 }
             }
             return false;
-        });
-
-        binding.userPhoneRegistration.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (!editable.toString().isEmpty()) {
-                    if (editable.toString().startsWith("01")) {
-                        if (editable.toString().length() == 11) {
-                            binding.userPhoneRegistrationLay.setHelperText("");
-                        }
-                        else {
-                            String nte = "Mobile No must be in 11 digit";
-                            binding.userPhoneRegistrationLay.setHelperText(nte);
-                        }
-                    }
-                    else {
-                        String nte = "Invalid Mobile No";
-                        binding.userPhoneRegistrationLay.setHelperText(nte);
-                    }
-
-                }
-                else {
-                    String nte = "Please Provide Mobile No";
-                    binding.userPhoneRegistrationLay.setHelperText(nte);
-                }
-            }
-        });
-
-        binding.userPhoneRegistration.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                String ss = Objects.requireNonNull( binding.userPhoneRegistration.getText()).toString();
-                if (ss.length() != 11) {
-                    String nte = "Mobile No must be in 11 digit";
-                    binding.userPhoneRegistrationLay.setHelperText(nte);
-                }
-                else {
-                    binding.userPhoneRegistrationLay.setHelperText("");
-                }
-            }
         });
 
         binding.userPhoneRegistration.setOnEditorActionListener((v, actionId, event) -> {
@@ -336,47 +287,28 @@ public class UserRegistration extends AppCompatActivity {
             if (!name.isEmpty()) {
                 binding.userNameRegistrationLay.setHelperText("");
                 if (!email.isEmpty()) {
-                    if (email.contains("@") && email.contains(".com")) {
+                    if (email.contains("@")) {
                         binding.userEmailRegistrationLay.setHelperText("");
-                        if (!phone.isEmpty()) {
-                            if (phone.startsWith("01")) {
-                                if (phone.length() == 11) {
-                                    binding.userPhoneRegistrationLay.setHelperText("");
-                                    if (!pass.isEmpty()) {
-                                        binding.userPasswordRegistrationLay.setHelperText("");
-                                        if (!confirm_pass.isEmpty()) {
-                                            binding.userConfirmPasswordRegistrationLay.setHelperText("");
-                                            if (pass.equals(confirm_pass)) {
-                                                checkValidUser();
-                                            }
-                                            else {
-                                                String nte = "Password did not match";
-                                                binding.userConfirmPasswordRegistrationLay.setHelperText(nte);
-                                            }
-                                        }
-                                        else {
-                                            String nte = "Please Provide Password Again";
-                                            binding.userConfirmPasswordRegistrationLay.setHelperText(nte);
-                                        }
-                                    }
-                                    else {
-                                        String nte = "Please Provide Password";
-                                        binding.userPasswordRegistrationLay.setHelperText(nte);
-                                    }
+                        if (!pass.isEmpty()) {
+                            binding.userPasswordRegistrationLay.setHelperText("");
+                            if (!confirm_pass.isEmpty()) {
+                                binding.userConfirmPasswordRegistrationLay.setHelperText("");
+                                if (pass.equals(confirm_pass)) {
+                                    checkValidUser();
                                 }
                                 else {
-                                    String nte = "Mobile No must be in 11 digit";
-                                    binding.userPhoneRegistrationLay.setHelperText(nte);
+                                    String nte = "Password did not match";
+                                    binding.userConfirmPasswordRegistrationLay.setHelperText(nte);
                                 }
                             }
                             else {
-                                String nte = "Invalid Mobile No";
-                                binding.userPhoneRegistrationLay.setHelperText(nte);
+                                String nte = "Please Provide Password Again";
+                                binding.userConfirmPasswordRegistrationLay.setHelperText(nte);
                             }
                         }
                         else {
-                            String nte = "Please Provide Mobile No";
-                            binding.userPhoneRegistrationLay.setHelperText(nte);
+                            String nte = "Please Provide Password";
+                            binding.userPasswordRegistrationLay.setHelperText(nte);
                         }
                     }
                     else {
@@ -412,14 +344,14 @@ public class UserRegistration extends AppCompatActivity {
         binding.progressIndicatorRegistration.setVisibility(View.VISIBLE);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(KEY_USER_TABLE_NAME)
-                .whereEqualTo(KEY_USER_PHONE,phone)
+                .whereEqualTo(KEY_USER_EMAIL,email)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null && !task.getResult().getDocuments().isEmpty()) {
 
                         binding.registrationCardView.setVisibility(View.VISIBLE);
                         binding.progressIndicatorRegistration.setVisibility(View.GONE);
-                        Toast.makeText(getApplicationContext(), phone+" is already registered.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), email+" is already registered.", Toast.LENGTH_SHORT).show();
                     }
                     else {
                         registerUser();
@@ -439,7 +371,7 @@ public class UserRegistration extends AppCompatActivity {
 
         user.put(KEY_USER_NAME, name);
         user.put(KEY_USER_EMAIL, email);
-        user.put(KEY_USER_PHONE, phone);
+        user.put(KEY_USER_PHONE, phone != null ? phone : "");
         user.put(KEY_USER_PASSWORD, pass);
         user.put(KEY_USER_SUBSCRIBE, "No");
         user.put(KEY_USER_EVENT_COUNT, "5");
@@ -451,7 +383,7 @@ public class UserRegistration extends AppCompatActivity {
         database.collection(KEY_USER_TABLE_NAME)
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(UserRegistration.this, "Registration success. Please Sign In to continue.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserRegistration.this, "Registration success. Please Login to continue.", Toast.LENGTH_SHORT).show();
                     finish();
                 })
                 .addOnFailureListener(e -> {

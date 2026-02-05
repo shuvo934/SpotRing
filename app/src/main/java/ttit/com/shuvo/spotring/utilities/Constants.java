@@ -4,7 +4,7 @@ public class Constants {
 
     public static final String LOGIN_ACTIVITY_FILE = "LOGIN_FILE_SPOT_RING";
     public static final String MyPREFERENCES = "UserPassSPOTRING" ;
-    public static final String user_mobile = "nameKey";
+    public static final String user_email = "nameKey";
     public static final String user_password = "passKey";
     public static final String checked = "trueFalse";
 

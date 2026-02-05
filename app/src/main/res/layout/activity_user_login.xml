@@ -81,14 +81,14 @@
                         android:orientation="vertical">
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/user_phone_log_in_lay"
+                            android:id="@+id/user_email_log_in_lay"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_25sdp"
                             android:layout_marginTop="@dimen/_25sdp"
                             android:layout_marginEnd="@dimen/_25sdp"
-                            android:hint="@string/hint_phone"
+                            android:hint="@string/hint_mail"
                             android:textColorHint="#b2bec3"
                             app:boxCornerRadiusBottomEnd="20dp"
                             app:boxCornerRadiusBottomStart="20dp"
@@ -102,12 +102,12 @@
                             app:hintTextColor="#b2bec3">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/user_phone_log_in"
+                                android:id="@+id/user_email_log_in"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
                                 android:fontFamily="@font/carter_one"
-                                android:inputType="phone"
+                                android:inputType="textEmailAddress"
                                 android:text=""
                                 android:textColor="@color/black" />
 
@@ -150,11 +150,9 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:orientation="horizontal">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <CheckBox
                                 android:id="@+id/remember_checkbox"
@@ -164,12 +162,31 @@
                                 android:layout_marginStart="@dimen/_25sdp"
                                 android:buttonTint="@color/belize_hole"
                                 android:checked="false"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
                                 android:fontFamily="@font/carter_one"
                                 android:gravity="center"
                                 android:text="@string/remember_text"
                                 android:textColor="@color/belize_hole"
                                 android:textSize="@dimen/_10sdp" />
-                        </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/forgot_password_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/_28sdp"
+                                android:layout_marginTop="@dimen/_2sdp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_toEndOf="@+id/remember_checkbox"
+                                android:gravity="end"
+                                android:text="Forgot Password?"
+                                android:textColor="@color/peter_river"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/_8sdp"
+                                android:fontFamily="@font/poppins"
+                                tools:ignore="HardcodedText" />
+                        </RelativeLayout>
 
                         <TextView
                             android:id="@+id/email_pass_miss"
@@ -209,17 +226,65 @@
                             android:textSize="@dimen/_10sdp"
                             tools:ignore="HardcodedText" />
 
-                        <TextView
-                            android:id="@+id/move_to_registration_text_view"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="REGISTER"
+                            android:orientation="horizontal"
                             android:gravity="center"
+                            android:layout_marginStart="@dimen/_25sdp"
+                            android:layout_marginEnd="@dimen/_25sdp"
                             android:layout_marginBottom="@dimen/_15sdp"
-                            android:fontFamily="@font/carter_one"
-                            android:textColor="@color/belize_hole"
-                            android:textSize="@dimen/_14sdp"
-                            tools:ignore="HardcodedText" />
+                            android:weightSum="10">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/sign_up_using_google"
+                                android:layout_width="0dp"
+                                android:layout_weight="4.5"
+                                android:layout_height="wrap_content"
+                                android:text="Sign up"
+                                app:cornerRadius="@dimen/_30sdp"
+                                app:backgroundTint="@color/clouds"
+                                app:strokeColor="@color/concrete"
+                                app:strokeWidth="@dimen/_1sdp"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:textSize="@dimen/_7sdp"
+                                android:textColor="@color/belize_hole"
+                                android:fontFamily="@font/roboto_bold"
+                                app:icon="@drawable/gg_icon"
+                                app:iconSize="@dimen/_11sdp"
+                                app:iconTintMode="multiply"
+                                app:iconGravity="textEnd"
+                                tools:ignore="HardcodedText" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="OR"
+                                android:gravity="center"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:fontFamily="@font/carter_one"
+                                android:textColor="@color/belize_hole"
+                                android:textSize="@dimen/_9sdp"
+                                tools:ignore="HardcodedText" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/move_to_registration_button"
+                                android:layout_width="0dp"
+                                android:layout_weight="4.5"
+                                android:layout_height="wrap_content"
+                                android:text="Register"
+                                app:cornerRadius="@dimen/_30sdp"
+                                app:backgroundTint="@color/clouds"
+                                app:strokeColor="@color/concrete"
+                                app:strokeWidth="@dimen/_1sdp"
+                                android:textSize="@dimen/_7sdp"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:textColor="@color/belize_hole"
+                                android:fontFamily="@font/roboto_bold"
+                                tools:ignore="HardcodedText" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

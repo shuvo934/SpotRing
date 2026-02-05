@@ -273,16 +273,33 @@
                     android:fontFamily="@font/poppins_bold"
                     android:textSize="@dimen/_10sdp"
                     tools:ignore="HardcodedText" />
-                <TextView
+<!--                <TextView-->
+<!--                    android:id="@+id/move_to_login_text_view"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="LOGIN"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_marginBottom="@dimen/_25sdp"-->
+<!--                    android:fontFamily="@font/carter_one"-->
+<!--                    android:textColor="@color/belize_hole"-->
+<!--                    android:textSize="@dimen/_14sdp"-->
+<!--                    tools:ignore="HardcodedText" />-->
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/move_to_login_text_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="LOGIN"
                     android:gravity="center"
+                    android:layout_gravity="center"
+                    app:cornerRadius="@dimen/_30sdp"
+                    app:backgroundTint="@color/clouds"
+                    app:strokeColor="@color/concrete"
+                    app:strokeWidth="@dimen/_1sdp"
+                    android:textSize="@dimen/_8sdp"
                     android:layout_marginBottom="@dimen/_25sdp"
-                    android:fontFamily="@font/carter_one"
                     android:textColor="@color/belize_hole"
-                    android:textSize="@dimen/_14sdp"
+                    android:fontFamily="@font/roboto_bold"
                     tools:ignore="HardcodedText" />
 
             </LinearLayout>

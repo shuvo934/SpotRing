@@ -7,9 +7,13 @@
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="button_register">Register</string>
-    <string name="remember_text">Remember Me</string>
-    <string name="password_not_match">The User Name and Password did not match</string>
+    <string name="remember_text">Remember</string>
+    <string name="password_not_match">The Email and Password did not match</string>
     <string name="login_text">Login</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="notify_channel">GEOFENCE_NOTIFY</string>
+    <string name="button_save_login">SAVE &amp; LOGIN</string>
+    <string name="forgot_text">Please enter the email address which is associated with your account where your account information will be sent to</string>
+    <string name="send_email">SEND EMAIL</string>
+    <string name="hint_send_email">Enter Email Address</string>
 </resources>
