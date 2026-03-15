@@ -76,7 +76,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_weight="2.5"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_8sdp"
@@ -119,6 +119,7 @@
                     android:orientation="vertical"/>
 
                 <LinearLayout
+                    android:id="@+id/full_screen_icon_lay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -165,6 +166,187 @@
                     android:paddingBottom="@dimen/_4sdp"
                     tools:ignore="ContentDescription" />
 
+                <RelativeLayout
+                    android:id="@+id/search_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/full_screen_icon_lay"
+                    android:layout_marginTop="@dimen/_25sdp"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_4sdp">
+
+                    <LinearLayout
+                        android:id="@+id/search_location_icon_lay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:layout_alignParentStart="true"
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_location_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/search_24"
+                            app:tint="@color/black"
+                            tools:ignore="ContentDescription" />
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/search_box_lay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:visibility="gone"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/search_location_icon_lay"
+                        android:layout_marginEnd="@dimen/_15sdp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/search_location_edit_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_alignParentEnd="true"
+                            app:boxBackgroundMode="outline"
+                            app:boxCornerRadiusBottomEnd="0dp"
+                            app:boxCornerRadiusTopEnd="20dp"
+                            app:boxCornerRadiusBottomStart="20dp"
+                            app:boxCornerRadiusTopStart="0dp"
+                            app:boxStrokeColor="@color/til_stroke_color"
+                            app:startIconDrawable="@drawable/location_pin"
+                            app:boxStrokeWidth="1dp"
+                            app:boxStrokeWidthFocused="1dp"
+                            app:boxStrokeErrorColor="@color/black"
+                            app:boxBackgroundColor="@color/white"
+                            app:helperTextEnabled="true"
+                            app:endIconDrawable="@drawable/close_24"
+                            app:endIconMode="custom"
+                            app:helperText=""
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/search_location_edit_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:fontFamily="@font/ubuntu_medium"
+                                android:hint="Search Location"
+                                android:imeOptions="actionSearch"
+                                android:inputType="text"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:paddingTop="@dimen/_13sdp"
+                                android:paddingEnd="@dimen/_20sdp"
+                                android:paddingBottom="@dimen/_15sdp"
+                                android:text=""
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_10sdp"
+                                tools:ignore="HardcodedText" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/search_button_for_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:elevation="0dp"
+                            app:cardElevation="0dp"
+                            android:layout_marginBottom="@dimen/_2sdp"
+                            app:cardBackgroundColor="@color/belize_hole"
+                            android:layout_alignParentEnd="true"
+                            android:layout_below="@+id/search_location_edit_layout"
+                            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialCardView.Cut">
+
+                            <TextView
+                                android:id="@+id/search_button_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="SEARCH"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_11sdp"
+                                android:padding="@dimen/_4sdp"
+                                android:fontFamily="@font/poppins_semibold"
+                                tools:ignore="HardcodedText" />
+
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/search_result_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_layout"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_4sdp">
+
+                    <LinearLayout
+                        android:id="@+id/dummy_location_icon_lay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/dummy_location_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/search_24"
+                            android:visibility="invisible"
+                            app:tint="@color/black"
+                            tools:ignore="ContentDescription" />
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_150sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_centerVertical="true"
+                        android:background="@android:color/transparent"
+                        android:layout_toEndOf="@+id/dummy_location_icon_lay"
+                        android:layout_marginEnd="@dimen/_15sdp">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="20dp"
+                            app:strokeColor="@color/belize_hole"
+                            app:strokeWidth="1dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginBottom="@dimen/_2sdp"
+                            app:cardBackgroundColor="@color/white">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/search_result_location_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+
+                            </RelativeLayout>
+
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
@@ -174,7 +356,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_weight="6">
+            android:layout_weight="7.5">
 
             <TextView
                 android:id="@+id/radius_text_to_save"

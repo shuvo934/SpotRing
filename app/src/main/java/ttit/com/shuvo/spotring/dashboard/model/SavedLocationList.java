@@ -21,6 +21,9 @@ public class SavedLocationList {
     private String repeat_type_id;
     private String repeat_type;
     private Boolean isActive;
+    private Boolean isFree;
+    private String geo_sl_no;
+    private Boolean subscribeActive;
     private ArrayList<CustomRepetitionDataList> customRepetitionDataLists;
     private boolean updated;
 
@@ -28,7 +31,8 @@ public class SavedLocationList {
                              String notes, String alert_type_id, String alert_type, String event_type_id,
                              String event_type_name, String alert_when_id, String alert_when,
                              String repeat_type_id, String repeat_type,
-                             Boolean isActive, ArrayList<CustomRepetitionDataList> customRepetitionDataLists, boolean updated) {
+                             Boolean isActive, Boolean isFree, String geo_sl_no, Boolean subscribeActive,
+                             ArrayList<CustomRepetitionDataList> customRepetitionDataLists, boolean updated) {
         this.geo_id = geo_id;
         this.lat = lat;
         this.lng = lng;
@@ -47,6 +51,9 @@ public class SavedLocationList {
         this.isActive = isActive;
         this.customRepetitionDataLists = customRepetitionDataLists;
         this.updated = updated;
+        this.isFree = isFree;
+        this.geo_sl_no = geo_sl_no;
+        this.subscribeActive = subscribeActive;
     }
 
     public boolean isUpdated() {
@@ -183,6 +190,30 @@ public class SavedLocationList {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Boolean getFree() {
+        return isFree;
+    }
+
+    public void setFree(Boolean free) {
+        isFree = free;
+    }
+
+    public String getGeo_sl_no() {
+        return geo_sl_no;
+    }
+
+    public void setGeo_sl_no(String geo_sl_no) {
+        this.geo_sl_no = geo_sl_no;
+    }
+
+    public Boolean getSubscribeActive() {
+        return subscribeActive;
+    }
+
+    public void setSubscribeActive(Boolean subscribeActive) {
+        this.subscribeActive = subscribeActive;
     }
 
     public ArrayList<CustomRepetitionDataList> getCustomRepetitionDataLists() {

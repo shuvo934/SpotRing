@@ -1,9 +1,13 @@
 package ttit.com.shuvo.spotring.geofences.get_location;
 
 import static ttit.com.shuvo.spotring.geofences.AddGeoFences.saveLocationListener;
+import static ttit.com.shuvo.spotring.user_auth.UserLogin.userInfoLists;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -12,14 +16,20 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,7 +40,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -49,14 +66,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import ttit.com.shuvo.spotring.R;
 import ttit.com.shuvo.spotring.databinding.ActivityLocationSelectionBinding;
+import ttit.com.shuvo.spotring.geofences.adapters.SearchLocationAdapter;
+import ttit.com.shuvo.spotring.geofences.model.SearchLocationList;
 
-public class LocationSelection extends AppCompatActivity implements OnMapReadyCallback {
+public class LocationSelection extends AppCompatActivity implements OnMapReadyCallback, SearchLocationAdapter.ClickedItem {
 
     ImageView backButton;
 
@@ -68,6 +97,22 @@ public class LocationSelection extends AppCompatActivity implements OnMapReadyCa
     Boolean fullScreen = false;
     ImageView myLocation;
     ImageView pinLocation;
+
+    ImageView searchImage;
+    RelativeLayout searchBoxLay;
+    TextInputLayout searchTextLay;
+    TextInputEditText searchText;
+    String searchedText = "";
+
+    MaterialCardView searchButton;
+    TextView searchButtonText;
+
+    ArrayList<SearchLocationList> searchLocationLists;
+    RelativeLayout searchResultLayout;
+
+    RecyclerView locationView;
+    RecyclerView.LayoutManager layoutManager;
+    SearchLocationAdapter searchLocationAdapter;
 
     LinearLayout slLayout;
 
@@ -82,6 +127,7 @@ public class LocationSelection extends AppCompatActivity implements OnMapReadyCa
     String radius_text = "";
     private Circle circle;
 
+    private int shortAnimationDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,11 +154,35 @@ public class LocationSelection extends AppCompatActivity implements OnMapReadyCa
         myLocation = binding.myLocationIconToSave;
         pinLocation = binding.locationPin;
 
+        searchImage = binding.searchLocationIcon;
+        searchBoxLay = binding.searchBoxLay;
+        searchBoxLay.setVisibility(View.GONE);
+
+        searchTextLay = binding.searchLocationEditLayout;
+        searchText = binding.searchLocationEditText;
+
+        searchButton = binding.searchButtonForLocation;
+        searchButtonText = binding.searchButtonText;
+
+        searchLocationLists = new ArrayList<>();
+
+        searchResultLayout = binding.searchResultLayout;
+        searchResultLayout.setVisibility(View.GONE);
+
+        locationView = binding.searchResultLocationView;
+        locationView.setHasFixedSize(true);
+        locationView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
+        locationView.setLayoutManager(layoutManager);
+
         slLayout = binding.radiusSaveLayout;
 
         radiusText = binding.radiusTextToSave;
         seekBar = binding.radiusSeekBar;
         saveButton = binding.setLocationButton;
+
+        shortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -213,6 +283,111 @@ public class LocationSelection extends AppCompatActivity implements OnMapReadyCa
                 Toast.makeText(this, "Please Select Radius", Toast.LENGTH_SHORT).show();
             }
         });
+
+        searchImage.setOnClickListener(view -> {
+            searchResultLayout.setVisibility(View.GONE);
+            if (searchBoxLay.getVisibility() == View.GONE) {
+                searchBoxLay.setVisibility(View.VISIBLE);
+                searchButton.setVisibility(View.GONE);
+                if (!Objects.requireNonNull(searchText.getText()).toString().isEmpty()) {
+                    searchButton.setVisibility(View.VISIBLE);
+                }
+                searchBoxLay.setAlpha(0.0f);
+                // Start the animation
+                searchBoxLay.animate()
+                        .alpha(1.0f)
+                        .setDuration(shortAnimationDuration)
+                        .setListener(null);
+            }
+            else {
+                searchButton.setVisibility(View.GONE);
+                searchBoxLay.animate()
+                        .alpha(0.0f)
+                        .setDuration(shortAnimationDuration)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                searchBoxLay.setVisibility(View.GONE);
+                            }
+                        });
+            }
+        });
+
+        searchTextLay.setEndIconOnClickListener(view -> {
+            searchResultLayout.setVisibility(View.GONE);
+            searchText.setText("");
+            if (searchText.hasFocus()) {
+                searchText.clearFocus();
+            }
+        });
+
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                searchResultLayout.setVisibility(View.GONE);
+                if (s.toString().isEmpty()) {
+                    searchButton.setVisibility(View.GONE);
+                }
+                else {
+                    searchButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        searchText.setOnEditorActionListener((v2, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER &&
+                    event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT) {
+                if (event == null || !event.isShiftPressed()) {
+                    // the user is done typing.
+
+                    closeKeyBoard();
+                    searchText.clearFocus();
+
+                    searchedText = Objects.requireNonNull(searchText.getText()).toString();
+
+                    if (!searchedText.isEmpty()) {
+                        getSearchedLocation();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Please write your location then search", Toast.LENGTH_SHORT).show();
+                    }
+
+                    return false; // consume.
+                }
+            }
+            return false;
+        });
+
+        searchButton.setOnClickListener(v1 -> {
+            searchedText = Objects.requireNonNull(searchText.getText()).toString();
+
+            if (!searchedText.isEmpty()) {
+                getSearchedLocation();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Please write your location then search", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void closeKeyBoard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            view.clearFocus();
+            InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            mgr.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -433,5 +608,88 @@ public class LocationSelection extends AppCompatActivity implements OnMapReadyCa
             }
         });
 //        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+    }
+
+    public void getSearchedLocation() {
+        String st = "SEARCHING...";
+        searchButtonText.setText(st);
+
+        searchLocationLists = new ArrayList<>();
+        String url = "https://nominatim.openstreetmap.org/search?q="+searchedText+"&format=json&limit=15";
+
+        RequestQueue requestQueue =  Volley.newRequestQueue(this);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
+            try {
+                JSONArray array = new JSONArray(response);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject info = array.getJSONObject(i);
+
+                    String s_loc_lat = info.getString("lat")
+                            .equals("null") ? "" : info.getString("lat");
+                    String s_loc_lon = info.getString("lon")
+                            .equals("null") ? "" : info.getString("lon");
+                    String s_loc_name = info.getString("name")
+                            .equals("null") ? "" : info.getString("name");
+                    String s_loc_display_name = info.getString("display_name")
+                            .equals("null") ? "" : info.getString("display_name");
+
+                    searchLocationLists.add(new SearchLocationList(s_loc_lat,s_loc_lon,s_loc_name,s_loc_display_name));
+                }
+
+                String stt = "SEARCH";
+                searchButtonText.setText(stt);
+                if (searchLocationLists.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Could not Find location for "+searchedText+". Please Try Again.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    searchButton.setVisibility(View.GONE);
+                    searchResultLayout.setVisibility(View.VISIBLE);
+
+                    searchLocationAdapter = new SearchLocationAdapter(searchLocationLists, LocationSelection.this, LocationSelection.this);
+                    locationView.setAdapter(searchLocationAdapter);
+                }
+            }
+            catch (JSONException e) {
+                String stt = "SEARCH";
+                searchButtonText.setText(stt);
+                Toast.makeText(getApplicationContext(), "Location Finding Error: "+e.getLocalizedMessage()+". Please Try Again.", Toast.LENGTH_SHORT).show();
+                System.out.println(e.getLocalizedMessage());
+            }
+        }, error -> {
+            String stt = "SEARCH";
+            searchButtonText.setText(stt);
+            Toast.makeText(getApplicationContext(), "Request Failed Error: "+error.getLocalizedMessage()+". Please Try Again.", Toast.LENGTH_SHORT).show();
+            System.out.println(error.getLocalizedMessage());
+        })
+        {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("User-Agent", "SpotRingApp/1.0 ("+userInfoLists.get(0).getP_email()+")");
+                return headers;
+            }
+        };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 4,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+
+        requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onLocationClicked(int position) {
+        if (!searchLocationLists.get(position).getLat().isEmpty() && !searchLocationLists.get(position).getLng().isEmpty()) {
+            LatLng latLng = new LatLng(Double.parseDouble(searchLocationLists.get(position).getLat()),Double.parseDouble(searchLocationLists.get(position).getLng()));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            searchResultLayout.setVisibility(View.GONE);
+            searchButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Could not find location", Toast.LENGTH_SHORT).show();
+        }
     }
 }

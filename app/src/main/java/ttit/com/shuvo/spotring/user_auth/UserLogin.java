@@ -1,16 +1,17 @@
 package ttit.com.shuvo.spotring.user_auth;
 
-import static android.content.ContentValues.TAG;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_EMAIL;
-import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_EVENT_COUNT;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_PASSWORD;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_PHONE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_PRODUCT_ID;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_P_TOKEN;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_SUBSCRIBE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_SUB_EXPIRE_DATE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_SUB_EXPIRE_M_SECONDS;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_TABLE_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.LOGIN_TF;
-import static ttit.com.shuvo.spotring.utilities.Constants.user_email;
 
 import android.content.Context;
 import android.content.Intent;
@@ -39,12 +40,9 @@ import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
 import androidx.credentials.exceptions.NoCredentialException;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -349,9 +347,12 @@ public class UserLogin extends AppCompatActivity implements SaveCallListener {
                         String p_email = documentSnapshot.getString(KEY_USER_EMAIL);
                         String p_password = documentSnapshot.getString(KEY_USER_PASSWORD);
                         String p_subscribed = documentSnapshot.getString(KEY_USER_SUBSCRIBE);
-                        String p_event_count = documentSnapshot.getString(KEY_USER_EVENT_COUNT);
+                        String p_subscription_pack = documentSnapshot.getString(KEY_USER_PRODUCT_ID);
+                        String p_purchase_token = documentSnapshot.getString(KEY_USER_P_TOKEN);
+                        String p_sub_exp_date = documentSnapshot.getString(KEY_USER_SUB_EXPIRE_DATE);
+                        String p_sub_exp_ms = documentSnapshot.getString(KEY_USER_SUB_EXPIRE_M_SECONDS);
                         userInfoLists = new ArrayList<>();
-                        userInfoLists.add(new UserInfoList(p_name,p_phone,p_email,p_password,p_subscribed, "",p_event_count,cloud_user_id,""));
+                        userInfoLists.add(new UserInfoList(p_name,p_phone,p_email,p_password,p_subscribed, p_subscription_pack,p_purchase_token,p_sub_exp_date,p_sub_exp_ms,cloud_user_id,""));
 
                         if (binding.rememberCheckbox.isChecked()) {
                             System.out.println("Remembered");
@@ -384,7 +385,10 @@ public class UserLogin extends AppCompatActivity implements SaveCallListener {
                         editor1.remove(KEY_USER_PASSWORD);
                         editor1.remove(KEY_USER_ID);
                         editor1.remove(KEY_USER_SUBSCRIBE);
-                        editor1.remove(KEY_USER_EVENT_COUNT);
+                        editor1.remove(KEY_USER_PRODUCT_ID);
+                        editor1.remove(KEY_USER_P_TOKEN);
+                        editor1.remove(KEY_USER_SUB_EXPIRE_DATE);
+                        editor1.remove(KEY_USER_SUB_EXPIRE_M_SECONDS);
                         editor1.remove(LOGIN_TF);
 
                         editor1.putString(KEY_USER_NAME, p_name);
@@ -393,7 +397,10 @@ public class UserLogin extends AppCompatActivity implements SaveCallListener {
                         editor1.putString(KEY_USER_PASSWORD, p_password);
                         editor1.putString(KEY_USER_ID,cloud_user_id);
                         editor1.putString(KEY_USER_SUBSCRIBE, p_subscribed);
-                        editor1.putString(KEY_USER_EVENT_COUNT, p_event_count);
+                        editor1.putString(KEY_USER_PRODUCT_ID, p_subscription_pack);
+                        editor1.putString(KEY_USER_P_TOKEN, p_purchase_token);
+                        editor1.putString(KEY_USER_SUB_EXPIRE_DATE, p_sub_exp_date);
+                        editor1.putString(KEY_USER_SUB_EXPIRE_M_SECONDS, p_sub_exp_ms);
                         editor1.putBoolean(LOGIN_TF,true);
 
                         editor1.apply();
@@ -464,16 +471,18 @@ public class UserLogin extends AppCompatActivity implements SaveCallListener {
         binding.progressIndicatorLogIn.setVisibility(View.VISIBLE);
         binding.logInDesignLayout.setVisibility(View.GONE);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        HashMap<String , Object> user = new HashMap<>();
 
         String is_subscribed = "No";
-        String event_count = "5";
+        HashMap<String , Object> user = new HashMap<>();
         user.put(KEY_USER_NAME, userData.getName());
         user.put(KEY_USER_EMAIL, userData.getEmailOrId());
         user.put(KEY_USER_PHONE, "");
         user.put(KEY_USER_PASSWORD, passwordForSave);
         user.put(KEY_USER_SUBSCRIBE, is_subscribed);
-        user.put(KEY_USER_EVENT_COUNT, event_count);
+        user.put(KEY_USER_PRODUCT_ID, "");
+        user.put(KEY_USER_P_TOKEN, "");
+        user.put(KEY_USER_SUB_EXPIRE_DATE, "");
+        user.put(KEY_USER_SUB_EXPIRE_M_SECONDS, "");
 
         database.collection(KEY_USER_TABLE_NAME)
                 .add(user)
@@ -481,7 +490,7 @@ public class UserLogin extends AppCompatActivity implements SaveCallListener {
                     if (task.isSuccessful() && task.getResult() != null) {
                         String cloud_user_id = task.getResult().getId();
                         userInfoLists = new ArrayList<>();
-                        userInfoLists.add(new UserInfoList(userData.getName(),"",userData.getEmailOrId(),passwordForSave,is_subscribed, "",event_count,cloud_user_id,""));
+                        userInfoLists.add(new UserInfoList(userData.getName(),"",userData.getEmailOrId(),passwordForSave,is_subscribed, "","","","", cloud_user_id,""));
 
                         SharedPreferences.Editor editor = sharedpreferences.edit();
                         editor.remove(Constants.user_email);
@@ -501,7 +510,10 @@ public class UserLogin extends AppCompatActivity implements SaveCallListener {
                         editor1.remove(KEY_USER_PASSWORD);
                         editor1.remove(KEY_USER_ID);
                         editor1.remove(KEY_USER_SUBSCRIBE);
-                        editor1.remove(KEY_USER_EVENT_COUNT);
+                        editor1.remove(KEY_USER_PRODUCT_ID);
+                        editor1.remove(KEY_USER_P_TOKEN);
+                        editor1.remove(KEY_USER_SUB_EXPIRE_DATE);
+                        editor1.remove(KEY_USER_SUB_EXPIRE_M_SECONDS);
                         editor1.remove(LOGIN_TF);
 
                         editor1.putString(KEY_USER_NAME, userData.getName());
@@ -510,7 +522,10 @@ public class UserLogin extends AppCompatActivity implements SaveCallListener {
                         editor1.putString(KEY_USER_PASSWORD, passwordForSave);
                         editor1.putString(KEY_USER_ID,cloud_user_id);
                         editor1.putString(KEY_USER_SUBSCRIBE, is_subscribed);
-                        editor1.putString(KEY_USER_EVENT_COUNT, event_count);
+                        editor1.putString(KEY_USER_PRODUCT_ID, "");
+                        editor1.putString(KEY_USER_P_TOKEN, "");
+                        editor1.putString(KEY_USER_SUB_EXPIRE_DATE, "");
+                        editor1.putString(KEY_USER_SUB_EXPIRE_M_SECONDS, "");
                         editor1.putBoolean(LOGIN_TF,true);
 
                         editor1.apply();
@@ -524,6 +539,11 @@ public class UserLogin extends AppCompatActivity implements SaveCallListener {
                         intent.putExtra("FROM_LOGIN",true);
                         startActivity(intent);
                         finish();
+                    }
+                    else {
+                        binding.progressIndicatorLogIn.setVisibility(View.GONE);
+                        binding.logInDesignLayout.setVisibility(View.VISIBLE);
+                        Toast.makeText(UserLogin.this, "Sign Up failed. Please try again", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {

@@ -3,18 +3,24 @@ package ttit.com.shuvo.spotring.dashboard;
 import static ttit.com.shuvo.spotring.user_auth.UserLogin.userInfoLists;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_ALERT_TYPE_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_ALERT_TYPE_NAME;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_EVENT_COUNT;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_EVENT_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_EVENT_NOTES;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_EVENT_TYPE_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_EVENT_TYPE_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_ID_FOR_TIME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_IS_ACTIVE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_IS_FREE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_PACK_FREE_COUNT;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_BEGIN_DATE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_BEGIN_TIME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_END_DATE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_END_TIME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_NAME;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_WEEK_DAY;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_SL;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_SUB_ACTIVE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_TIME_TABLE_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_TRIGGER_TYPE_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_TRIGGER_TYPE_NAME;
@@ -27,12 +33,15 @@ import static ttit.com.shuvo.spotring.utilities.Constants.KEY_LOC_TABLE_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_LONGITUDE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_RADIUS;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_EMAIL;
-import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_EVENT_COUNT;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_PASSWORD;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_PHONE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_PRODUCT_ID;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_P_TOKEN;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_SUBSCRIBE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_SUB_EXPIRE_DATE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_SUB_EXPIRE_M_SECONDS;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_USER_TABLE_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.LOGIN_ACTIVITY_FILE;
 import static ttit.com.shuvo.spotring.utilities.Constants.LOGIN_TF;
@@ -59,6 +68,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -78,6 +88,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -104,13 +118,17 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import ttit.com.shuvo.spotring.R;
 import ttit.com.shuvo.spotring.dashboard.adapters.SavedLocationAdapter;
@@ -119,6 +137,7 @@ import ttit.com.shuvo.spotring.databinding.ActivityHomePageBinding;
 import ttit.com.shuvo.spotring.geofences.AddGeoFences;
 import ttit.com.shuvo.spotring.geofences.model.CustomRepetitionDataList;
 import ttit.com.shuvo.spotring.geofences.model.DocumentDeleteList;
+import ttit.com.shuvo.spotring.subscription.SubscriptionPack;
 import ttit.com.shuvo.spotring.user_auth.UserLogin;
 import ttit.com.shuvo.spotring.user_auth.model.UserInfoList;
 
@@ -131,7 +150,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
     ImageView userImage;
     TextView profileName;
     String p_name = "";
-    String p_phone = "";
+    String p_email = "";
     ImageView logOut;
 
     private GoogleMap mMap;
@@ -153,7 +172,6 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
     RecyclerView.LayoutManager layoutManager;
     SavedLocationAdapter savedLocationAdapter;
     ArrayList<SavedLocationList> savedLocationLists;
-    String userEventCount = "";
     String userSubscribed = "";
 
     TextView noLocation;
@@ -173,6 +191,10 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
     boolean needRefresh = true;
     ArrayList<DocumentDeleteList> deleteLists;
     boolean fromLogin = false;
+
+    String exp_date_from_play = "";
+    String free_event_count = "";
+    FrameLayout subscriptionIcon;
 
     TextView bannerNote;
 
@@ -217,6 +239,8 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
         noLocation = binding.noLocationFoundMsg;
         noLocation.setVisibility(View.GONE);
 
+        subscriptionIcon = binding.subscriptionIcon;
+
         locationView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         locationView.setLayoutManager(layoutManager);
@@ -236,10 +260,13 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
             String userPass = sharedPreferences.getString(KEY_USER_PASSWORD, null);
             String userId = sharedPreferences.getString(KEY_USER_ID, null);
             userSubscribed = sharedPreferences.getString(KEY_USER_SUBSCRIBE, null);
-            userEventCount = sharedPreferences.getString(KEY_USER_EVENT_COUNT, null);
+            String sub_pack = sharedPreferences.getString(KEY_USER_PRODUCT_ID, null);
+            String token = sharedPreferences.getString(KEY_USER_P_TOKEN, null);
+            String exp_date = sharedPreferences.getString(KEY_USER_SUB_EXPIRE_DATE, null);
+            String exp_ms = sharedPreferences.getString(KEY_USER_SUB_EXPIRE_M_SECONDS, null);
 
             userInfoLists = new ArrayList<>();
-            userInfoLists.add(new UserInfoList(userName, userPhone, userEmail, userPass, userSubscribed, "", userEventCount, userId, ""));
+            userInfoLists.add(new UserInfoList(userName, userPhone, userEmail, userPass, userSubscribed, sub_pack,token, exp_date, exp_ms, userId, ""));
         }
         else {
             Toast.makeText(this, "User Data No Found. Please Login Again", Toast.LENGTH_SHORT).show();
@@ -253,7 +280,10 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
             editor1.remove(KEY_USER_PASSWORD);
             editor1.remove(KEY_USER_ID);
             editor1.remove(KEY_USER_SUBSCRIBE);
-            editor1.remove(KEY_USER_EVENT_COUNT);
+            editor1.remove(KEY_USER_PRODUCT_ID);
+            editor1.remove(KEY_USER_P_TOKEN);
+            editor1.remove(KEY_USER_SUB_EXPIRE_DATE);
+            editor1.remove(KEY_USER_SUB_EXPIRE_M_SECONDS);
             editor1.remove(LOGIN_TF);
             editor1.apply();
             editor1.commit();
@@ -267,23 +297,10 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
         fromLogin = intentData.getBooleanExtra("FROM_LOGIN",false);
 
         p_name = userInfoLists.get(0).getP_name();
-        p_phone = userInfoLists.get(0).getP_phone();
-        profileName.setText(p_name);
+        p_email = userInfoLists.get(0).getP_email();
+        profileName.setText(p_name == null ? "" : p_name);
         bannerNote.setSelected(true);
 
-        screenChanger.setOnClickListener(view -> {
-            if (!fullScreen) {
-                slLayout.setVisibility(View.GONE);
-                addLocation.setVisibility(View.GONE);
-                screenChanger.setImageResource(R.drawable.fullscreen_exit);
-                fullScreen = true;
-            } else {
-                slLayout.setVisibility(View.VISIBLE);
-                addLocation.setVisibility(View.VISIBLE);
-                screenChanger.setImageResource(R.drawable.fullscreen);
-                fullScreen = false;
-            }
-        });
 
         List<String> categories = new ArrayList<>();
         categories.add("NORMAL");
@@ -317,7 +334,10 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                             editor1.remove(KEY_USER_PASSWORD);
                             editor1.remove(KEY_USER_ID);
                             editor1.remove(KEY_USER_SUBSCRIBE);
-                            editor1.remove(KEY_USER_EVENT_COUNT);
+                            editor1.remove(KEY_USER_PRODUCT_ID);
+                            editor1.remove(KEY_USER_P_TOKEN);
+                            editor1.remove(KEY_USER_SUB_EXPIRE_DATE);
+                            editor1.remove(KEY_USER_SUB_EXPIRE_M_SECONDS);
                             editor1.remove(LOGIN_TF);
                             editor1.apply();
                             editor1.commit();
@@ -380,29 +400,90 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
 //        });
 
         addLocation.setOnClickListener(view -> {
-            if (userEventCount != null && !userEventCount.isEmpty()) {
-                if (Integer.parseInt(userEventCount) > savedLocationLists.size()) {
-                    needRefresh = true;
-                    Intent intent = new Intent(HomePage.this, AddGeoFences.class);
-                    intent.putExtra("Type", "1");
-                    startActivity(intent);
+            int count = 0;
+            int total_count  = savedLocationLists.size();
+            for (int i = 0; i < savedLocationLists.size(); i++) {
+                if (savedLocationLists.get(i).getFree()) {
+                    count++;
                 }
-                else {
-                    MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(HomePage.this);
-                    if (userSubscribed != null && !userSubscribed.isEmpty()) {
+            }
+            int f_count = Integer.parseInt(free_event_count);
+            if (count < f_count) {
+                needRefresh = true;
+                Intent intent = new Intent(HomePage.this, AddGeoFences.class);
+                intent.putExtra("Type", "1");
+                intent.putExtra("Free_used", count);
+                intent.putExtra("Free_event_count", free_event_count);
+                intent.putExtra("Total_count", total_count);
+                startActivity(intent);
+            }
+            else {
+                MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(HomePage.this);
+                if (userSubscribed != null) {
+                    if (!userSubscribed.isEmpty()) {
                         if (userSubscribed.equalsIgnoreCase("yes")) {
-                            alertDialogBuilder.setTitle("Upgrade Subscription!")
-                                    .setMessage("You have used all your subscribed event. Please upgrade your subscription pack to get extra event slot.")
-                                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                                    .setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss());
+                            Calendar calendar = Calendar.getInstance();
+                            Date now = calendar.getTime();
+                            String exp_ms = userInfoLists.get(0).getP_sub_expire_ms();
+                            if (exp_ms != null) {
+                                if (!exp_ms.isEmpty()) {
+                                    long expTime = Long.parseLong(exp_ms);
+                                    Date expDate = new Date(expTime);
+                                    System.out.println(expDate.getTime());
+                                    System.out.println(now.getTime());
+                                    if (expDate.getTime() < now.getTime()) {
+                                        alertDialogBuilder.setTitle("Subscription Expired!")
+                                                .setMessage("Your subscription pack has expired. Please upgrade your subscription pack to add events.")
+                                                .setPositiveButton("OK", (dialog, which) -> {
+                                                    needRefresh = true;
+                                                    Intent intent = new Intent(HomePage.this, SubscriptionPack.class);
+                                                    intent.putExtra("Free_event_count", free_event_count);
+                                                    startActivity(intent);
+                                                    dialog.dismiss();
+                                                })
+                                                .setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss());
 
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
+                                        AlertDialog alert = alertDialogBuilder.create();
+                                        alert.show();
+                                    }
+                                    else {
+                                        needRefresh = true;
+                                        Intent intent = new Intent(HomePage.this, AddGeoFences.class);
+                                        intent.putExtra("Type", "1");
+                                        intent.putExtra("Free_used", count);
+                                        intent.putExtra("Free_event_count", free_event_count);
+                                        intent.putExtra("Total_count", total_count);
+                                        startActivity(intent);
+                                    }
+                                }
+                                else {
+                                    alertDialogBuilder.setTitle("Subscription Verification Failed!")
+                                            .setMessage("Could not verify your subscription. Please try again.")
+                                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
+                                    AlertDialog alert = alertDialogBuilder.create();
+                                    alert.show();
+                                }
+                            }
+                            else {
+                                alertDialogBuilder.setTitle("Subscription Verification Failed!")
+                                        .setMessage("Could not verify your subscription. Please try again.")
+                                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
+                                AlertDialog alert = alertDialogBuilder.create();
+                                alert.show();
+                            }
                         }
                         else {
-                            alertDialogBuilder.setTitle("Need Subscription!")
-                                    .setMessage("You have used all your Free event. Please subscribe to get extra event slot.")
-                                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                            alertDialogBuilder.setTitle("Upgrade to Pro!")
+                                    .setMessage("You have used all your Free event. Please subscribe to add more events.")
+                                    .setPositiveButton("OK", (dialog, which) -> {
+                                        needRefresh = true;
+                                        Intent intent = new Intent(HomePage.this, SubscriptionPack.class);
+                                        intent.putExtra("Free_event_count", free_event_count);
+                                        startActivity(intent);
+                                        dialog.dismiss();
+                                    })
                                     .setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss());
 
                             AlertDialog alert = alertDialogBuilder.create();
@@ -410,22 +491,44 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                         }
                     }
                     else {
-                        alertDialogBuilder.setTitle("Need Subscription!")
-                                .setMessage("You have used all your Free event. Please subscribe to get extra event slot.")
-                                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        alertDialogBuilder.setTitle("Upgrade to Pro!")
+                                .setMessage("You have used all your Free event. Please subscribe to add more events.")
+                                .setPositiveButton("OK", (dialog, which) -> {
+                                    needRefresh = true;
+                                    Intent intent = new Intent(HomePage.this, SubscriptionPack.class);
+                                    intent.putExtra("Free_event_count", free_event_count);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                })
                                 .setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss());
 
                         AlertDialog alert = alertDialogBuilder.create();
                         alert.show();
                     }
                 }
+                else {
+                    alertDialogBuilder.setTitle("Upgrade to Pro!")
+                            .setMessage("You have used all your Free event. Please subscribe to add more events.")
+                            .setPositiveButton("OK", (dialog, which) -> {
+                                needRefresh = true;
+                                Intent intent = new Intent(HomePage.this, SubscriptionPack.class);
+                                intent.putExtra("Free_event_count", free_event_count);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            })
+                            .setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss());
+
+                    AlertDialog alert = alertDialogBuilder.create();
+                    alert.show();
+                }
             }
-            else {
-                needRefresh = true;
-                Intent intent = new Intent(HomePage.this, AddGeoFences.class);
-                intent.putExtra("Type", "1");
-                startActivity(intent);
-            }
+        });
+
+        subscriptionIcon.setOnClickListener(v1 -> {
+            needRefresh = true;
+            Intent intent = new Intent(HomePage.this, SubscriptionPack.class);
+            intent.putExtra("Free_event_count", free_event_count);
+            startActivity(intent);
         });
 
         someActivityResultLauncher = registerForActivityResult(
@@ -735,6 +838,22 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
             }
         });
 
+        screenChanger.setOnClickListener(view -> {
+            if (!fullScreen) {
+                slLayout.setVisibility(View.GONE);
+                addLocation.setVisibility(View.GONE);
+                screenChanger.setImageResource(R.drawable.fullscreen_exit);
+                mMap.getUiSettings().setZoomControlsEnabled(true);
+                fullScreen = true;
+            } else {
+                slLayout.setVisibility(View.VISIBLE);
+                addLocation.setVisibility(View.VISIBLE);
+                screenChanger.setImageResource(R.drawable.fullscreen);
+                mMap.getUiSettings().setZoomControlsEnabled(false);
+                fullScreen = false;
+            }
+        });
+
     }
 
     @Override
@@ -878,7 +997,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
         loading = true;
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        database.collection(KEY_LOC_TABLE_NAME).whereEqualTo(KEY_GEO_USER_NAME,p_phone)
+        database.collection(KEY_LOC_TABLE_NAME).whereEqualTo(KEY_GEO_USER_NAME,p_email)
                 .get()
                 .addOnCompleteListener(task -> {
                     conn = true;
@@ -958,7 +1077,10 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                 editor1.remove(KEY_USER_PASSWORD);
                 editor1.remove(KEY_USER_ID);
                 editor1.remove(KEY_USER_SUBSCRIBE);
-                editor1.remove(KEY_USER_EVENT_COUNT);
+                editor1.remove(KEY_USER_PRODUCT_ID);
+                editor1.remove(KEY_USER_P_TOKEN);
+                editor1.remove(KEY_USER_SUB_EXPIRE_DATE);
+                editor1.remove(KEY_USER_SUB_EXPIRE_M_SECONDS);
                 editor1.remove(LOGIN_TF);
                 editor1.apply();
                 editor1.commit();
@@ -1014,54 +1136,114 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
         loading = true;
 
         savedLocationLists = new ArrayList<>();
+        String url = "https://script.google.com/macros/s/AKfycbzsv_lF5eGCTGmrLjKplFKQkXH9CBMLZl6aNDgvSpRIKk_ezMoDkcPre--M3qpSU_U/exec";
 
-        FirebaseFirestore cloudDatabase = FirebaseFirestore.getInstance();
+        if (userInfoLists.get(0).getP_purchase_token() != null && userInfoLists.get(0).getP_sub_expire_date() != null) {
+            if (!userInfoLists.get(0).getP_purchase_token().isEmpty() && !userInfoLists.get(0).getP_sub_expire_date().isEmpty()) {
 
-        System.out.println(p_phone);
-        cloudDatabase.collection(KEY_USER_TABLE_NAME)
-                .whereEqualTo(KEY_USER_PHONE, p_phone)
+                StringRequest request = new StringRequest(
+                        Request.Method.POST,
+                        url,
+                        response -> {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean ok = jsonObject.optBoolean("ok", false);
+                                if (ok) {
+                                    long expiryMillis = jsonObject.optLong("expiryTimeMillis", 0);
+
+                                    if (expiryMillis > 0) {
+                                        Date d = new Date(expiryMillis);
+                                        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+
+                                        exp_date_from_play = sdf.format(d);
+
+                                        if (String.valueOf(expiryMillis).equals(userInfoLists.get(0).getP_sub_expire_ms())) {
+                                            getLocationDataDetails();
+                                        } else {
+                                            updateUserExpDate(exp_date_from_play, String.valueOf(expiryMillis));
+                                        }
+                                    }
+                                    else {
+                                        Toast.makeText(this, "Exp Date Not Found", Toast.LENGTH_LONG).show();
+                                        getLocationDataDetails();
+                                    }
+                                } else {
+                                    Toast.makeText(this, "API Error", Toast.LENGTH_LONG).show();
+                                    getLocationDataDetails();
+                                }
+                            }
+                            catch (Exception e) {
+                                Toast.makeText(this, "Exception Error: " +e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                                getLocationDataDetails();
+                            }
+                        },
+                        error -> {
+                            Toast.makeText(this, "Verification failed: " + error.toString(), Toast.LENGTH_LONG).show();
+                            getLocationDataDetails();
+                        }
+                ){
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("packageName", getPackageName());
+                        params.put("purchaseToken", userInfoLists.get(0).getP_purchase_token());
+                        return params;
+                    }
+                };
+
+                request.setRetryPolicy(new DefaultRetryPolicy(
+                        DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 10,
+                        0,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                Volley.newRequestQueue(this).add(request);
+
+            } else {
+                getLocationDataDetails();
+            }
+        }
+        else {
+            getLocationDataDetails();
+        }
+    }
+
+    private void updateUserExpDate(String date, String ms) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+        HashMap<String , Object> user = new HashMap<>();
+        user.put(KEY_USER_SUB_EXPIRE_DATE, date);
+        user.put(KEY_USER_SUB_EXPIRE_M_SECONDS, ms);
+
+        database.collection(KEY_USER_TABLE_NAME).whereEqualTo(KEY_USER_EMAIL, p_email)
                 .get()
-                .addOnSuccessListener(task -> {
-                    conn = true;
-                    connected = true;
-                    if (task.getDocuments().isEmpty()) {
-                        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(this);
-                        alertDialogBuilder.setTitle("No User Found!")
-                                .setMessage("We have not found any user according to this credential. Please login again to continue. If you have any activated Event then please reactivate again,")
-                                .setPositiveButton("OK", (dialog, which) -> {
-                                    userInfoLists.clear();
-                                    userInfoLists = new ArrayList<>();
-
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().getDocuments().isEmpty()) {
+                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                        database.collection(KEY_USER_TABLE_NAME)
+                                .document(documentSnapshot.getId())
+                                .update(user)
+                                .addOnSuccessListener(unused -> {
+                                    userInfoLists.get(0).setP_sub_expire_date(date);
+                                    userInfoLists.get(0).setP_sub_expire_ms(ms);
                                     SharedPreferences.Editor editor1 = sharedPreferences.edit();
-                                    editor1.remove(KEY_USER_NAME);
-                                    editor1.remove(KEY_USER_PHONE);
-                                    editor1.remove(KEY_USER_EMAIL);
-                                    editor1.remove(KEY_USER_PASSWORD);
-                                    editor1.remove(KEY_USER_ID);
-                                    editor1.remove(KEY_USER_SUBSCRIBE);
-                                    editor1.remove(KEY_USER_EVENT_COUNT);
-                                    editor1.remove(LOGIN_TF);
+                                    editor1.remove(KEY_USER_SUB_EXPIRE_DATE);
+                                    editor1.remove(KEY_USER_SUB_EXPIRE_M_SECONDS);
+                                    editor1.putString(KEY_USER_SUB_EXPIRE_DATE, date);
+                                    editor1.putString(KEY_USER_SUB_EXPIRE_M_SECONDS, ms);
                                     editor1.apply();
                                     editor1.commit();
-
-                                    Intent intent = new Intent(HomePage.this, UserLogin.class);
-                                    startActivity(intent);
-                                    dialog.dismiss();
-                                    finish();
-
+                                    getLocationDataDetails();
+                                })
+                                .addOnFailureListener(e -> {
+                                    conn = false;
+                                    connected = false;
+                                    parsing_message = e.getLocalizedMessage();
+                                    updateLayout();
                                 });
 
-                        AlertDialog alert = alertDialogBuilder.create();
-                        alert.setCancelable(false);
-                        alert.setCanceledOnTouchOutside(false);
-                        alert.show();
-                    }
-                    else {
-                        fetchLocationData(cloudDatabase);
                     }
                 })
                 .addOnFailureListener(e -> {
-                    System.out.println("FAILED");
                     conn = false;
                     connected = false;
                     parsing_message = e.getLocalizedMessage();
@@ -1069,9 +1251,76 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                 });
     }
 
+    private void getLocationDataDetails() {
+        FirebaseFirestore cloudDatabase = FirebaseFirestore.getInstance();
+
+        cloudDatabase.collection(KEY_GEO_PACK_FREE_COUNT)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().getDocuments().isEmpty()) {
+                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                        free_event_count = documentSnapshot.getString(KEY_GEO_EVENT_COUNT);
+                    }
+                    if (free_event_count == null || free_event_count.isEmpty()) free_event_count = "5";
+
+                    cloudDatabase.collection(KEY_USER_TABLE_NAME)
+                            .whereEqualTo(KEY_USER_EMAIL, p_email)
+                            .get()
+                            .addOnSuccessListener(task1 -> {
+                                conn = true;
+                                connected = true;
+                                if (task1.getDocuments().isEmpty()) {
+                                    MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(this);
+                                    alertDialogBuilder.setTitle("No User Found!")
+                                            .setMessage("We have not found any user according to this credential. Please login again to continue. If you have any activated Event then please reactivate again,")
+                                            .setPositiveButton("OK", (dialog, which) -> {
+                                                userInfoLists.clear();
+                                                userInfoLists = new ArrayList<>();
+
+                                                SharedPreferences.Editor editor1 = sharedPreferences.edit();
+                                                editor1.remove(KEY_USER_NAME);
+                                                editor1.remove(KEY_USER_PHONE);
+                                                editor1.remove(KEY_USER_EMAIL);
+                                                editor1.remove(KEY_USER_PASSWORD);
+                                                editor1.remove(KEY_USER_ID);
+                                                editor1.remove(KEY_USER_SUBSCRIBE);
+                                                editor1.remove(KEY_USER_PRODUCT_ID);
+                                                editor1.remove(KEY_USER_P_TOKEN);
+                                                editor1.remove(KEY_USER_SUB_EXPIRE_DATE);
+                                                editor1.remove(KEY_USER_SUB_EXPIRE_M_SECONDS);
+                                                editor1.remove(LOGIN_TF);
+                                                editor1.apply();
+                                                editor1.commit();
+
+                                                Intent intent = new Intent(HomePage.this, UserLogin.class);
+                                                startActivity(intent);
+                                                dialog.dismiss();
+                                                finish();
+
+                                            });
+
+                                    AlertDialog alert = alertDialogBuilder.create();
+                                    alert.setCancelable(false);
+                                    alert.setCanceledOnTouchOutside(false);
+                                    alert.show();
+                                }
+                                else {
+                                    fetchLocationData(cloudDatabase);
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                System.out.println("FAILED");
+                                conn = false;
+                                connected = false;
+                                parsing_message = e.getLocalizedMessage();
+                                updateLayout();
+                            });
+                });
+    }
+
     private void fetchLocationData(FirebaseFirestore cloudDatabase) {
         cloudDatabase.collection(KEY_LOC_TABLE_NAME)
-                .whereEqualTo(KEY_GEO_USER_NAME, p_phone)
+                .whereEqualTo(KEY_GEO_USER_NAME, p_email)
                 .orderBy(KEY_GEO_UPDATE_DATE, Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(task -> {
@@ -1098,9 +1347,12 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                             String repeat_id = documentSnapshots.get(i).getString(KEY_GEO_REPEAT_ID);
                             String repeat_name = documentSnapshots.get(i).getString(KEY_GEO_REPEAT_NAME);
                             Boolean isActive = documentSnapshots.get(i).getBoolean(KEY_GEO_IS_ACTIVE);
+                            Boolean isFree = documentSnapshots.get(i).getBoolean(KEY_GEO_IS_FREE);
+                            String geo_sl = documentSnapshots.get(i).getString(KEY_GEO_SL);
+                            Boolean geo_sub_active = documentSnapshots.get(i).getBoolean(KEY_GEO_SUB_ACTIVE);
 
                             savedLocationLists.add(new SavedLocationList(id,lat,lng,radius,eve_name,eve_adds,desc,alert_type_id,alert_type_name,event_type_id,
-                                    event_type_name,trigger_type_id,trigger_type_name,repeat_id,repeat_name,isActive,new ArrayList<>(),false));
+                                    event_type_name,trigger_type_id,trigger_type_name,repeat_id,repeat_name,isActive,isFree,geo_sl,geo_sub_active, new ArrayList<>(),false));
                         }
                     }
                     checkToGetTime();
@@ -1154,7 +1406,8 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                                 String ed = documentSnapshots.get(i).getString(KEY_GEO_REPEAT_END_DATE);
                                 String bt = documentSnapshots.get(i).getString(KEY_GEO_REPEAT_BEGIN_TIME);
                                 String et = documentSnapshots.get(i).getString(KEY_GEO_REPEAT_END_TIME);
-                                dataLists.add(new CustomRepetitionDataList(bd,ed,bt,et,false));
+                                String wd = documentSnapshots.get(i).getString(KEY_GEO_REPEAT_WEEK_DAY);
+                                dataLists.add(new CustomRepetitionDataList(bd,ed,bt,et,wd,false));
                             }
                         }
                         savedLocationLists.get(index).setUpdated(true);
@@ -1193,6 +1446,27 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                 }
                 else {
                     noLocation.setVisibility(View.GONE);
+
+                    Calendar calendar = Calendar.getInstance();
+                    Date now = calendar.getTime();
+
+                    for (int i = 0; i < savedLocationLists.size(); i++) {
+                        if (!savedLocationLists.get(i).getFree()) {
+                            if (savedLocationLists.get(i).getSubscribeActive()) {
+                                String exp_ms = userInfoLists.get(0).getP_sub_expire_ms();
+                                if (exp_ms != null) {
+                                    if (!exp_ms.isEmpty()) {
+                                        long expTime = Long.parseLong(exp_ms);
+                                        Date expDate = new Date(expTime);
+                                        if (expDate.getTime() < now.getTime()) {
+                                            savedLocationLists.get(i).setSubscribeActive(false);
+                                            savedLocationLists.get(i).setActive(false);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 savedLocationAdapter = new SavedLocationAdapter(savedLocationLists,HomePage.this, HomePage.this,HomePage.this, HomePage.this, HomePage.this);
@@ -1351,6 +1625,9 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
         intent.putExtra("Repetition_type_id",savedLocationList.getRepeat_type_id());
         intent.putParcelableArrayListExtra("custom_date",savedLocationList.getCustomRepetitionDataLists());
         intent.putExtra("geo_id",savedLocationList.getGeo_id());
+        intent.putExtra("geoFree", savedLocationList.getFree());
+        intent.putExtra("geoSl", savedLocationList.getGeo_sl_no());
+        intent.putExtra("geoSubActive", savedLocationList.getSubscribeActive());
 
         startActivity(intent);
     }
@@ -1372,20 +1649,25 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                 boolean ff = false;
                 for (int i = 0; i < customRepetitionDataLists.size(); i++) {
                     String end_date = customRepetitionDataLists.get(i).getEnd_date();
-                    Date date = null;
-                    Date e_date = null;
-                    try {
-                        date = da.parse(n_date);
-                        e_date = da.parse(end_date);
-                    } catch (ParseException e) {
-                        String er = e.getLocalizedMessage();
-                        System.out.println(er);
-                    }
-                    if (date != null && e_date != null) {
-                        if (date.before(e_date) || date.equals(e_date)) {
-                            ff = true;
-                            break;
+                    if (!end_date.isEmpty()) {
+                        Date date = null;
+                        Date e_date = null;
+                        try {
+                            date = da.parse(n_date);
+                            e_date = da.parse(end_date);
+                        } catch (ParseException e) {
+                            String er = e.getLocalizedMessage();
+                            System.out.println(er);
                         }
+                        if (date != null && e_date != null) {
+                            if (date.before(e_date) || date.equals(e_date)) {
+                                ff = true;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        ff = true;
                     }
                 }
                 canBeChanged = ff;

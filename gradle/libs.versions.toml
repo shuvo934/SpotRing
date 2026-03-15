@@ -1,5 +1,7 @@
 [versions]
 agp = "8.11.0"
+appUpdate = "2.1.0"
+billing = "8.3.0"
 circleimageview = "3.1.0"
 compiler = "4.13.2"
 credentials = "1.5.0"
@@ -22,9 +24,12 @@ firebaseFirestore = "25.1.0"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "19.0.0"
 timerangepicker = "1.0.0"
+volley = "1.2.1"
 #ucrop = "2.2.10"
 
 [libraries]
+app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdate" }
+billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
@@ -48,6 +53,7 @@ sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdpAndroid
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 timerangepicker = { module = "nl.joery.timerangepicker:timerangepicker", version.ref = "timerangepicker" }
+volley = { module = "com.android.volley:volley", version.ref = "volley" }
 #ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 
 [plugins]

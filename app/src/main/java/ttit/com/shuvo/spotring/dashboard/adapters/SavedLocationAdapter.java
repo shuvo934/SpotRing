@@ -83,6 +83,8 @@ public class SavedLocationAdapter extends RecyclerView.Adapter<SavedLocationAdap
         ClickedSwitch clickedSwitch;
         ClickedDelete clickedDelete;
 
+        LinearLayout needVIP;
+
         public SLAHolder(@NonNull View itemView, ClickedMap cm, ClickedEvent ce, ClickedSwitch cs, ClickedDelete cd) {
             super(itemView);
             layout = itemView;
@@ -105,6 +107,8 @@ public class SavedLocationAdapter extends RecyclerView.Adapter<SavedLocationAdap
             geoSwitch = layout.findViewById(R.id.geo_activation_switch);
             deleteFence = layout.findViewById(R.id.delete_fence_button);
             eventLayout = layout.findViewById(R.id.event_click_listen_layout);
+            needVIP = layout.findViewById(R.id.no_editable_layout);
+            needVIP.setVisibility(View.GONE);
             this.clickedMap = cm;
             this.clickedEvent = ce;
             this.clickedSwitch = cs;
@@ -161,6 +165,27 @@ public class SavedLocationAdapter extends RecyclerView.Adapter<SavedLocationAdap
             alertWhen.setText(item.getAlert_when());
             repeatType.setText(item.getRepeat_type());
             geoSwitch.setChecked(item.isActive());
+
+            if (item.getFree()) {
+                needVIP.setVisibility(View.GONE);
+                eventLayout.setEnabled(true);
+                geoSwitch.setEnabled(true);
+                deleteFence.setEnabled(true);
+            }
+            else {
+                if (item.getSubscribeActive()) {
+                    needVIP.setVisibility(View.GONE);
+                    eventLayout.setEnabled(true);
+                    geoSwitch.setEnabled(true);
+                    deleteFence.setEnabled(true);
+                }
+                else {
+                    needVIP.setVisibility(View.VISIBLE);
+                    eventLayout.setEnabled(false);
+                    geoSwitch.setEnabled(false);
+                    deleteFence.setEnabled(false);
+                }
+            }
         }
 
         @Override

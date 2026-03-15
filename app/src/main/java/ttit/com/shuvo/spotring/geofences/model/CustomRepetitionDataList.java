@@ -10,13 +10,15 @@ public class CustomRepetitionDataList implements Parcelable {
     private String end_date;
     private String begin_time;
     private String end_time;
+    private String weeklyDays;
     private boolean updated;
 
-    public CustomRepetitionDataList(String begin_date, String end_date, String begin_time, String end_time, boolean updated) {
+    public CustomRepetitionDataList(String begin_date, String end_date, String begin_time, String end_time, String weeklyDays, boolean updated) {
         this.begin_date = begin_date;
         this.end_date = end_date;
         this.begin_time = begin_time;
         this.end_time = end_time;
+        this.weeklyDays = weeklyDays;
         this.updated = updated;
     }
 
@@ -25,6 +27,7 @@ public class CustomRepetitionDataList implements Parcelable {
         end_date = in.readString();
         begin_time = in.readString();
         end_time = in.readString();
+        weeklyDays = in.readString();
         updated = in.readByte() != 0;
     }
 
@@ -60,6 +63,14 @@ public class CustomRepetitionDataList implements Parcelable {
         this.end_time = end_time;
     }
 
+    public String getWeeklyDays() {
+        return weeklyDays;
+    }
+
+    public void setWeeklyDays(String weeklyDays) {
+        this.weeklyDays = weeklyDays;
+    }
+
     public boolean isUpdated() {
         return updated;
     }
@@ -91,6 +102,7 @@ public class CustomRepetitionDataList implements Parcelable {
         parcel.writeString(end_date);
         parcel.writeString(begin_time);
         parcel.writeString(end_time);
+        parcel.writeString(weeklyDays);
         parcel.writeByte((byte) (updated ? 1 : 0));
     }
 }

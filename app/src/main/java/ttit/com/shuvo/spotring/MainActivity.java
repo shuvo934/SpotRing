@@ -1,5 +1,6 @@
 package ttit.com.shuvo.spotring;
 
+import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
 import static ttit.com.shuvo.spotring.utilities.Constants.LOGIN_ACTIVITY_FILE;
 import static ttit.com.shuvo.spotring.utilities.Constants.LOGIN_TF;
 
@@ -13,9 +14,21 @@ import android.os.Handler;
 import android.provider.Settings;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.appupdate.AppUpdateOptions;
+import com.google.android.play.core.install.model.UpdateAvailability;
 
 import ttit.com.shuvo.spotring.dashboard.HomePage;
 import ttit.com.shuvo.spotring.permission_checker.AllPermissionScreen;
@@ -32,6 +45,24 @@ public class MainActivity extends AppCompatActivity {
     boolean notification_permission = false;
     boolean over_other_app_permission = false;
 
+    AppUpdateManager appUpdateManager;
+
+    ActivityResultLauncher<IntentSenderRequest> activityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(),
+                    result -> {
+                        if (result.getResultCode() != RESULT_OK) {
+
+                            MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(MainActivity.this)
+                                    .setTitle("Update Failed!")
+                                    .setMessage("Failed to update the app. Please try again.")
+                                    .setIcon(R.drawable.spotring_icon_new)
+                                    .setPositiveButton("Retry", (dialog, which) -> getAppUpdate())
+                                    .setNegativeButton("Cancel", (dialog, which) -> finish());
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
+                        }
+                    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +70,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sharedPreferences = getSharedPreferences(LOGIN_ACTIVITY_FILE,MODE_PRIVATE);
         loginfile = sharedPreferences.getBoolean(LOGIN_TF,false);
+        appUpdateManager = AppUpdateManagerFactory.create(MainActivity.this);
 
-        checkPermissionStatus();
+        getAppUpdate();
+    }
+
+    private void getAppUpdate() {
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE))  {
+
+                appUpdateManager.startUpdateFlowForResult(appUpdateInfo,
+                        activityResultLauncher, AppUpdateOptions
+                                .newBuilder(IMMEDIATE)
+                                .build());
+            }
+            else {
+                System.out.println("No update available");
+                checkPermissionStatus();
+            }
+        });
+        appUpdateInfoTask.addOnFailureListener(e -> {
+            System.out.println("FAILED TO LISTEN");
+            checkPermissionStatus();
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appUpdateManager
+                .getAppUpdateInfo()
+                .addOnSuccessListener(
+                        appUpdateInfo -> {
+                            if (appUpdateInfo.updateAvailability()
+                                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                                // If an in-app update is already running, resume the update.
+                                appUpdateManager.startUpdateFlowForResult(appUpdateInfo,
+                                        activityResultLauncher,AppUpdateOptions
+                                                .newBuilder(IMMEDIATE)
+                                                .build());
+                            }
+                        });
     }
 
     public void checkPermissionStatus() {

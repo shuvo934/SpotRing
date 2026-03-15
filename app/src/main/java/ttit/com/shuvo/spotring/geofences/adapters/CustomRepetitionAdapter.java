@@ -38,41 +38,55 @@ public class CustomRepetitionAdapter extends RecyclerView.Adapter<CustomRepetiti
 
     @Override
     public void onBindViewHolder(@NonNull CRAHolder holder, int position) {
-        CustomRepetitionDataList customRepetitionDataList = mCategory.get(position);
+        CustomRepetitionDataList dataList = mCategory.get(position);
         String text;
-        if (customRepetitionDataList.getBegin_date().isEmpty() || customRepetitionDataList.getEnd_date().isEmpty()) {
-            if (customRepetitionDataList.getBegin_time().equals(customRepetitionDataList.getEnd_time())) {
-                text = "At " + customRepetitionDataList.getBegin_time();
+        if (dataList.getBegin_date().isEmpty() && dataList.getEnd_date().isEmpty() && !dataList.getBegin_time().isEmpty() && !dataList.getEnd_time().isEmpty() && dataList.getWeeklyDays().isEmpty()) {
+            if (dataList.getBegin_time().equals(dataList.getEnd_time())) {
+                text = "At " + dataList.getBegin_time();
             }
             else {
-                text = "From " + customRepetitionDataList.getBegin_time() + " to " + customRepetitionDataList.getEnd_time();
+                text = "From " + dataList.getBegin_time() + " to " + dataList.getEnd_time();
             }
         }
-        else if (customRepetitionDataList.getBegin_time().isEmpty() || customRepetitionDataList.getEnd_time().isEmpty()) {
-            if (customRepetitionDataList.getBegin_date().equals(customRepetitionDataList.getEnd_date())) {
-                text = "At " + customRepetitionDataList.getBegin_date();
+        else if (!dataList.getBegin_date().isEmpty() && !dataList.getEnd_date().isEmpty() && dataList.getBegin_time().isEmpty() && dataList.getEnd_time().isEmpty() && dataList.getWeeklyDays().isEmpty()) {
+            if (dataList.getBegin_date().equals(dataList.getEnd_date())) {
+                text = "On " + dataList.getBegin_date();
             }
             else {
-                text = "From " + customRepetitionDataList.getBegin_date() + " to " + customRepetitionDataList.getEnd_date();
+                text = "From " + dataList.getBegin_date() + " to " + dataList.getEnd_date();
             }
+        }
+        else if (!dataList.getBegin_date().isEmpty() && !dataList.getEnd_date().isEmpty() && !dataList.getBegin_time().isEmpty() && !dataList.getEnd_time().isEmpty() && dataList.getWeeklyDays().isEmpty()) {
+            if (dataList.getBegin_time().equals(dataList.getEnd_time())
+                    && dataList.getBegin_date().equals(dataList.getEnd_date())) {
+                text = "On " + dataList.getBegin_date() + " at " + dataList.getBegin_time();
+            }
+            else if (dataList.getBegin_time().equals(dataList.getEnd_time())) {
+                text = "From " + dataList.getBegin_date() + " to " + dataList.getEnd_date() +
+                        " at " + dataList.getBegin_time();
+            }
+            else if (dataList.getBegin_date().equals(dataList.getEnd_date())) {
+                text = "On " + dataList.getBegin_date()+
+                        " From " + dataList.getBegin_time() + " to " + dataList.getEnd_time();
+            }
+            else {
+                text = "From " + dataList.getBegin_date() + " to " + dataList.getEnd_date() +
+                        " at " + dataList.getBegin_time() + " to " + dataList.getEnd_time();
+            }
+        }
+        else if (dataList.getBegin_date().isEmpty() && dataList.getEnd_date().isEmpty() && !dataList.getBegin_time().isEmpty() && !dataList.getEnd_time().isEmpty() && !dataList.getWeeklyDays().isEmpty()) {
+            if (dataList.getBegin_time().equals(dataList.getEnd_time())) {
+                text = "On " + dataList.getWeeklyDays() + " at " + dataList.getBegin_time();
+            }
+            else {
+                text = "On " + dataList.getWeeklyDays() + " From " + dataList.getBegin_time() + " to " + dataList.getEnd_time();
+            }
+        }
+        else if (dataList.getBegin_date().isEmpty() && dataList.getEnd_date().isEmpty() && dataList.getBegin_time().isEmpty() && dataList.getEnd_time().isEmpty() && !dataList.getWeeklyDays().isEmpty()) {
+            text = "On " + dataList.getWeeklyDays();
         }
         else {
-            if (customRepetitionDataList.getBegin_time().equals(customRepetitionDataList.getEnd_time())
-                    && customRepetitionDataList.getBegin_date().equals(customRepetitionDataList.getEnd_date())) {
-                text = "At " + customRepetitionDataList.getBegin_date() + " in " + customRepetitionDataList.getBegin_time();
-            }
-            else if (customRepetitionDataList.getBegin_time().equals(customRepetitionDataList.getEnd_time())) {
-                text = "From " + customRepetitionDataList.getBegin_date() + " to " + customRepetitionDataList.getEnd_date() +
-                        " at " + customRepetitionDataList.getBegin_time();
-            }
-            else if (customRepetitionDataList.getBegin_date().equals(customRepetitionDataList.getEnd_date())) {
-                text = "At " + customRepetitionDataList.getBegin_date()+
-                        " From " + customRepetitionDataList.getBegin_time() + " to " + customRepetitionDataList.getEnd_time();
-            }
-            else {
-                text = "From " + customRepetitionDataList.getBegin_date() + " to " + customRepetitionDataList.getEnd_date() +
-                        " at " + customRepetitionDataList.getBegin_time() + " to " + customRepetitionDataList.getEnd_time();
-            }
+            text = "Invalid Date Range. Please select again";
         }
         holder.itemName.setText(text);
         if (position == 0) {

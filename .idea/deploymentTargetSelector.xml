@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-01-28T06:58:11.050139Z">
+        <DropdownSelection timestamp="2026-03-15T03:19:51.123728Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/Users/macminim4/.android/avd/Pixel_6a_2.avd" />

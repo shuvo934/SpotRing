@@ -12,8 +12,8 @@ android {
         applicationId "ttit.com.shuvo.spotring"
         minSdk 24
         targetSdk 35
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 8
+        versionName "1.0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -68,4 +68,13 @@ dependencies {
     implementation libs.credentials
     implementation libs.credentials.play.services.auth
     implementation libs.googleid
+
+    // api handler
+    implementation libs.volley
+
+    // google billing
+    implementation libs.billing
+
+    //in app update
+    implementation libs.app.update
 }

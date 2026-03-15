@@ -12,12 +12,16 @@ import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_EVENT_TYPE_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_EVENT_TYPE_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_ID_FOR_TIME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_IS_ACTIVE;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_IS_FREE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_BEGIN_DATE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_BEGIN_TIME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_END_DATE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_END_TIME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_NAME;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_REPEAT_WEEK_DAY;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_SL;
+import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_SUB_ACTIVE;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_TIME_TABLE_NAME;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_TRIGGER_TYPE_ID;
 import static ttit.com.shuvo.spotring.utilities.Constants.KEY_GEO_TRIGGER_TYPE_NAME;
@@ -95,6 +99,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -111,6 +117,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -213,6 +220,22 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
 
     BottomSheetDialog bottomSheetPicker;
 
+    SwitchCompat weekRangeSwitch;
+    MaterialCheckBox allWeekCheckBox;
+    LinearLayout weekLayout;
+    MaterialCardView sunCard, monCard, tueCard, wedCard, thuCard, friCard, satCard;
+    TextView sunText, monText, tueText, wedText, thuText, friText, satText;
+
+    boolean weekRangeEnabled = false;
+    boolean sunEnabled = false;
+    boolean monEnabled = false;
+    boolean tueEnabled = false;
+    boolean wedEnabled = false;
+    boolean thuEnabled = false;
+    boolean friEnabled = false;
+    boolean satEnabled = false;
+    String weekDays = "";
+
     SwitchCompat dateRangeSwitch;
     TextInputLayout dateRangLayout;
     TextInputEditText dateRangeText;
@@ -252,6 +275,14 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
 
     String geo_id = "";
     ArrayList<DocumentDeleteList> deleteLists;
+
+    int total_free_used = 0;
+    String free_event_count = "0";
+    int total_count = 0;
+
+    boolean savedGeoFree = false;
+    String savedSlNo = "";
+    boolean savedSubAcv = false;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -394,6 +425,24 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
             behavior.setDraggable(false);
         }
 
+        weekRangeSwitch = bottomSheetPicker.findViewById(R.id.week_range_activation_switch);
+        allWeekCheckBox = bottomSheetPicker.findViewById(R.id.all_week_selection_box);
+        weekLayout = bottomSheetPicker.findViewById(R.id.all_week_layout);
+        sunCard = bottomSheetPicker.findViewById(R.id.sun_week_day_card);
+        sunText = bottomSheetPicker.findViewById(R.id.sun_week_day_text);
+        monCard = bottomSheetPicker.findViewById(R.id.mon_week_day_card);
+        monText = bottomSheetPicker.findViewById(R.id.mon_week_day_text);
+        tueCard = bottomSheetPicker.findViewById(R.id.tue_week_day_card);
+        tueText = bottomSheetPicker.findViewById(R.id.tue_week_day_text);
+        wedCard = bottomSheetPicker.findViewById(R.id.wed_week_day_card);
+        wedText = bottomSheetPicker.findViewById(R.id.wed_week_day_text);
+        thuCard = bottomSheetPicker.findViewById(R.id.thu_week_day_card);
+        thuText = bottomSheetPicker.findViewById(R.id.thu_week_day_text);
+        friCard = bottomSheetPicker.findViewById(R.id.fri_week_day_card);
+        friText = bottomSheetPicker.findViewById(R.id.fri_week_day_text);
+        satCard = bottomSheetPicker.findViewById(R.id.sat_week_day_card);
+        satText = bottomSheetPicker.findViewById(R.id.sat_week_day_text);
+
         dateRangeSwitch = bottomSheetPicker.findViewById(R.id.date_range_activation_switch);
         dateRangLayout = bottomSheetPicker.findViewById(R.id.date_range_selection_layout_date_picker);
         dateRangeText = bottomSheetPicker.findViewById(R.id.date_range_selection_date_picker);
@@ -408,6 +457,10 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         rangeSetCancel = bottomSheetPicker.findViewById(R.id.cancel_date_time_selection_button);
 
         assert bottomSheetPicker != null;
+        weekRangeSwitch.setChecked(weekRangeEnabled);
+        allWeekCheckBox.setVisibility(View.GONE);
+        weekLayout.setVisibility(View.GONE);
+
         dateRangeSwitch.setChecked(dateRangeEnabled);
         dateRangLayout.setEnabled(true);
 
@@ -427,6 +480,9 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                 appBarName.setText(t);
                 addGeo.setVisibility(View.VISIBLE);
                 updateGeo.setVisibility(View.GONE);
+                total_free_used = intentData.getIntExtra("Free_used", 0);
+                free_event_count = intentData.getStringExtra("Free_event_count") == null ? "0" : intentData.getStringExtra("Free_event_count");
+                total_count = intentData.getIntExtra("Total_count", 0);
                 Intent l_intent = new Intent(AddGeoFences.this, LocationSelection.class);
                 startActivity(l_intent);
             }
@@ -457,11 +513,14 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                 ArrayList<CustomRepetitionDataList> crdl = intentData.getParcelableArrayListExtra("custom_date");
                 if (crdl != null) {
                     for (int c = 0; c < crdl.size(); c++) {
-                        customDataLists.add(new CustomRepetitionDataList(crdl.get(c).getBegin_date(), crdl.get(c).getEnd_date(), crdl.get(c).getBegin_time(), crdl.get(c).getEnd_time(), crdl.get(c).isUpdated()));
+                        customDataLists.add(new CustomRepetitionDataList(crdl.get(c).getBegin_date(), crdl.get(c).getEnd_date(), crdl.get(c).getBegin_time(), crdl.get(c).getEnd_time(), crdl.get(c).getWeeklyDays(), crdl.get(c).isUpdated()));
                     }
                 }
 
                 geo_id = intentData.getStringExtra("geo_id") == null ? "" : intentData.getStringExtra("geo_id");
+                savedGeoFree = intentData.getBooleanExtra("geoFree", false);
+                savedSlNo = intentData.getStringExtra("geoSl") == null ? "" : intentData.getStringExtra("geoSl");
+                savedSubAcv = intentData.getBooleanExtra("geoSubActive", false);
             }
         }
 
@@ -618,19 +677,205 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
             bottomSheetDialog.show();
         });
 
-        dateRangeSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-            dateRangeEnabled = b;
-            dateRangLayout.setEnabled(b);
-            if (b) {
-                if (!start_date.isEmpty() && !end_date.isEmpty()) {
-                    String dateRange = start_date + " --- " + end_date;
-                    dateRangeText.setText(dateRange);
-                } else {
-                    dateRangeText.setText("");
+        weekRangeSwitch.setOnClickListener(view -> {
+            weekRangeEnabled = weekRangeSwitch.isChecked();
+            if (weekRangeEnabled) {
+                if (dateRangeEnabled) {
+                    weekRangeEnabled = false;
+                    weekRangeSwitch.setChecked(false);
+                    allWeekCheckBox.setVisibility(View.GONE);
+                    weekLayout.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "Disable Date Range first to enable Week Range", Toast.LENGTH_SHORT).show();
                 }
-            } else {
+                else {
+                    weekRangeSwitch.setChecked(true);
+                    allWeekCheckBox.setVisibility(View.VISIBLE);
+                    weekLayout.setVisibility(View.VISIBLE);
+                }
+            }
+            else {
+                weekRangeSwitch.setChecked(false);
+                allWeekCheckBox.setVisibility(View.GONE);
+                weekLayout.setVisibility(View.GONE);
+            }
+        });
+
+        sunCard.setOnClickListener(view -> {
+            sunEnabled = !sunEnabled;
+            if (sunEnabled) {
+                sunCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                sunText.setTextColor(getColor(R.color.white));
+            }
+            else {
+                sunCard.setCardBackgroundColor(getColor(R.color.white));
+                sunText.setTextColor(getColor(R.color.belize_hole));
+            }
+            allWeekCheckBox.setChecked(sunEnabled && monEnabled && tueEnabled && wedEnabled && thuEnabled && friEnabled && satEnabled);
+        });
+
+        monCard.setOnClickListener(view -> {
+            monEnabled = !monEnabled;
+            if (monEnabled) {
+                monCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                monText.setTextColor(getColor(R.color.white));
+            }
+            else {
+                monCard.setCardBackgroundColor(getColor(R.color.white));
+                monText.setTextColor(getColor(R.color.belize_hole));
+            }
+            allWeekCheckBox.setChecked(sunEnabled && monEnabled && tueEnabled && wedEnabled && thuEnabled && friEnabled && satEnabled);
+        });
+
+        tueCard.setOnClickListener(view -> {
+            tueEnabled = !tueEnabled;
+            if (tueEnabled) {
+                tueCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                tueText.setTextColor(getColor(R.color.white));
+            }
+            else {
+                tueCard.setCardBackgroundColor(getColor(R.color.white));
+                tueText.setTextColor(getColor(R.color.belize_hole));
+            }
+            allWeekCheckBox.setChecked(sunEnabled && monEnabled && tueEnabled && wedEnabled && thuEnabled && friEnabled && satEnabled);
+        });
+
+        wedCard.setOnClickListener(view -> {
+            wedEnabled = !wedEnabled;
+            if (wedEnabled) {
+                wedCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                wedText.setTextColor(getColor(R.color.white));
+            }
+            else {
+                wedCard.setCardBackgroundColor(getColor(R.color.white));
+                wedText.setTextColor(getColor(R.color.belize_hole));
+            }
+            allWeekCheckBox.setChecked(sunEnabled && monEnabled && tueEnabled && wedEnabled && thuEnabled && friEnabled && satEnabled);
+        });
+
+        thuCard.setOnClickListener(view -> {
+            thuEnabled = !thuEnabled;
+            if (thuEnabled) {
+                thuCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                thuText.setTextColor(getColor(R.color.white));
+            }
+            else {
+                thuCard.setCardBackgroundColor(getColor(R.color.white));
+                thuText.setTextColor(getColor(R.color.belize_hole));
+            }
+            allWeekCheckBox.setChecked(sunEnabled && monEnabled && tueEnabled && wedEnabled && thuEnabled && friEnabled && satEnabled);
+        });
+
+        friCard.setOnClickListener(view -> {
+            friEnabled = !friEnabled;
+            if (friEnabled) {
+                friCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                friText.setTextColor(getColor(R.color.white));
+            }
+            else {
+                friCard.setCardBackgroundColor(getColor(R.color.white));
+                friText.setTextColor(getColor(R.color.belize_hole));
+            }
+            allWeekCheckBox.setChecked(sunEnabled && monEnabled && tueEnabled && wedEnabled && thuEnabled && friEnabled && satEnabled);
+        });
+
+        satCard.setOnClickListener(view -> {
+            satEnabled = !satEnabled;
+            if (satEnabled) {
+                satCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                satText.setTextColor(getColor(R.color.white));
+            }
+            else {
+                satCard.setCardBackgroundColor(getColor(R.color.white));
+                satText.setTextColor(getColor(R.color.belize_hole));
+            }
+            allWeekCheckBox.setChecked(sunEnabled && monEnabled && tueEnabled && wedEnabled && thuEnabled && friEnabled && satEnabled);
+        });
+
+        allWeekCheckBox.setOnClickListener(v1 -> {
+            if (allWeekCheckBox.isChecked()) {
+                sunEnabled = true;
+                monEnabled = true;
+                tueEnabled = true;
+                wedEnabled = true;
+                thuEnabled = true;
+                friEnabled = true;
+                satEnabled = true;
+                sunCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                sunText.setTextColor(getColor(R.color.white));
+                monCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                monText.setTextColor(getColor(R.color.white));
+                tueCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                tueText.setTextColor(getColor(R.color.white));
+                wedCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                wedText.setTextColor(getColor(R.color.white));
+                thuCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                thuText.setTextColor(getColor(R.color.white));
+                friCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                friText.setTextColor(getColor(R.color.white));
+                satCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+                satText.setTextColor(getColor(R.color.white));
+            }
+            else {
+                sunEnabled = false;
+                monEnabled = false;
+                tueEnabled = false;
+                wedEnabled = false;
+                thuEnabled = false;
+                friEnabled = false;
+                satEnabled = false;
+                sunCard.setCardBackgroundColor(getColor(R.color.white));
+                sunText.setTextColor(getColor(R.color.belize_hole));
+                monCard.setCardBackgroundColor(getColor(R.color.white));
+                monText.setTextColor(getColor(R.color.belize_hole));
+                tueCard.setCardBackgroundColor(getColor(R.color.white));
+                tueText.setTextColor(getColor(R.color.belize_hole));
+                wedCard.setCardBackgroundColor(getColor(R.color.white));
+                wedText.setTextColor(getColor(R.color.belize_hole));
+                thuCard.setCardBackgroundColor(getColor(R.color.white));
+                thuText.setTextColor(getColor(R.color.belize_hole));
+                friCard.setCardBackgroundColor(getColor(R.color.white));
+                friText.setTextColor(getColor(R.color.belize_hole));
+                satCard.setCardBackgroundColor(getColor(R.color.white));
+                satText.setTextColor(getColor(R.color.belize_hole));
+            }
+        });
+
+        dateRangeSwitch.setOnClickListener(view -> {
+            dateRangeEnabled = dateRangeSwitch.isChecked();
+            if (dateRangeEnabled) {
+                if (weekRangeEnabled) {
+                    dateRangeSwitch.setChecked(false);
+                    dateRangLayout.setEnabled(false);
+                    dateRangeText.setText("");
+                    Toast.makeText(getApplicationContext(), "Disable Week Range first to enable Date Range", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    dateRangeSwitch.setChecked(true);
+                    dateRangLayout.setEnabled(true);
+                    if (!start_date.isEmpty() && !end_date.isEmpty()) {
+                        String dateRange = start_date + " --- " + end_date;
+                        dateRangeText.setText(dateRange);
+                    } else {
+                        dateRangeText.setText("");
+                    }
+                }
+            }
+            else {
+                dateRangeSwitch.setChecked(false);
+                dateRangLayout.setEnabled(false);
                 dateRangeText.setText("");
             }
+//            dateRangLayout.setEnabled(b);
+//            if (b) {
+//                if (!start_date.isEmpty() && !end_date.isEmpty()) {
+//                    String dateRange = start_date + " --- " + end_date;
+//                    dateRangeText.setText(dateRange);
+//                } else {
+//                    dateRangeText.setText("");
+//                }
+//            } else {
+//                dateRangeText.setText("");
+//            }
         });
 
         dateRangeText.setOnClickListener(view -> {
@@ -728,7 +973,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
 
         rangeSetOk.setOnClickListener(view -> {
             if (selectedPosition == -1) {
-                if (dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked()) {
+                if (dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked() && !weekRangeSwitch.isChecked()) {
                     if (!start_date.isEmpty() && !end_date.isEmpty() && !start_time.isEmpty() && !end_time.isEmpty()) {
                         int pos = 0;
                         for (int i = 0; i < repetitionLists.size(); i++) {
@@ -748,7 +993,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                         repetitionType.setText(repetition_type_name);
                         customLay.setVisibility(View.VISIBLE);
 //                        String cd = "From  " + start_date + "  to  " + end_date + "\nat  " + start_time + "  to  " + end_time;
-                        customDataLists.add(new CustomRepetitionDataList(start_date, end_date, start_time, end_time, false));
+                        customDataLists.add(new CustomRepetitionDataList(start_date, end_date, start_time, end_time, "",false));
                         customRepetitionAdapter.notifyDataSetChanged();
                         addMoreCustom.setVisibility(View.VISIBLE);
                         bottomSheetPicker.dismiss();
@@ -756,7 +1001,8 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                     } else {
                         Toast.makeText(AddGeoFences.this, "Please Select Date & Time Range", Toast.LENGTH_SHORT).show();
                     }
-                } else if (dateRangeSwitch.isChecked() && !timeRangeSwitch.isChecked()) {
+                }
+                else if (dateRangeSwitch.isChecked() && !timeRangeSwitch.isChecked() && !weekRangeSwitch.isChecked()) {
                     if (!start_date.isEmpty() && !end_date.isEmpty()) {
 
                         int pos = 0;
@@ -777,7 +1023,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                         repetitionType.setText(repetition_type_name);
                         customLay.setVisibility(View.VISIBLE);
 //                        String cd = "From  " + start_date + "  to  " + end_date;
-                        customDataLists.add(new CustomRepetitionDataList(start_date, end_date, "", "", false));
+                        customDataLists.add(new CustomRepetitionDataList(start_date, end_date, "", "", "",false));
                         customRepetitionAdapter.notifyDataSetChanged();
                         addMoreCustom.setVisibility(View.VISIBLE);
 
@@ -786,7 +1032,8 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                     } else {
                         Toast.makeText(AddGeoFences.this, "Please Select Date Range", Toast.LENGTH_SHORT).show();
                     }
-                } else if (!dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked()) {
+                }
+                else if (!dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked() && !weekRangeSwitch.isChecked()) {
                     if (!start_time.isEmpty() && !end_time.isEmpty()) {
 
                         int pos = 0;
@@ -807,7 +1054,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                         repetitionType.setText(repetition_type_name);
                         customLay.setVisibility(View.VISIBLE);
 //                        String cd = "From  " + start_time + "  to  " + end_time;
-                        customDataLists.add(new CustomRepetitionDataList("", "", start_time, end_time, false));
+                        customDataLists.add(new CustomRepetitionDataList("", "", start_time, end_time, "",false));
                         customRepetitionAdapter.notifyDataSetChanged();
                         addMoreCustom.setVisibility(View.VISIBLE);
                         bottomSheetPicker.dismiss();
@@ -815,11 +1062,82 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                     } else {
                         Toast.makeText(AddGeoFences.this, "Please Select Time Range", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(AddGeoFences.this, "Please Select At least Date or Time Range", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                if (dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked()) {
+                else if (!dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked() && weekRangeSwitch.isChecked()) {
+                    boolean anyEnabled = sunEnabled || monEnabled || tueEnabled || wedEnabled || thuEnabled || friEnabled || satEnabled;
+                    if (anyEnabled && !start_time.isEmpty() && !end_time.isEmpty()) {
+                        int pos = 0;
+                        for (int i = 0; i < repetitionLists.size(); i++) {
+                            if (repetitionLists.get(i).getId().equals("3")) {
+                                pos = i;
+                            }
+                        }
+                        repetition_type_id = "3";
+                        repetition_type_name = repetitionLists.get(pos).getName();
+
+                        for (int i = 0; i < repetitionLists.size(); i++) {
+                            repetitionLists.get(i).setClicked(false);
+                        }
+
+                        repetitionLists.get(pos).setClicked(true);
+
+                        repetitionType.setText(repetition_type_name);
+                        customLay.setVisibility(View.VISIBLE);
+//                        String cd = "From  " + start_date + "  to  " + end_date + "\nat  " + start_time + "  to  " + end_time;
+                        weekDays = getWeekDate();
+
+                        customDataLists.add(new CustomRepetitionDataList("", "", start_time, end_time, weekDays,false));
+                        customRepetitionAdapter.notifyDataSetChanged();
+                        addMoreCustom.setVisibility(View.VISIBLE);
+                        bottomSheetPicker.dismiss();
+                        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+                    }
+                    else {
+                        Toast.makeText(AddGeoFences.this, "Please Select Week & Time Range", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (!dateRangeSwitch.isChecked() && !timeRangeSwitch.isChecked() && weekRangeSwitch.isChecked()) {
+                    boolean anyEnabled = sunEnabled || monEnabled || tueEnabled || wedEnabled || thuEnabled || friEnabled || satEnabled;
+                    if (anyEnabled) {
+                        int pos = 0;
+                        for (int i = 0; i < repetitionLists.size(); i++) {
+                            if (repetitionLists.get(i).getId().equals("3")) {
+                                pos = i;
+                            }
+                        }
+                        repetition_type_id = "3";
+                        repetition_type_name = repetitionLists.get(pos).getName();
+
+                        for (int i = 0; i < repetitionLists.size(); i++) {
+                            repetitionLists.get(i).setClicked(false);
+                        }
+
+                        repetitionLists.get(pos).setClicked(true);
+
+                        repetitionType.setText(repetition_type_name);
+                        customLay.setVisibility(View.VISIBLE);
+//                        String cd = "From  " + start_date + "  to  " + end_date + "\nat  " + start_time + "  to  " + end_time;
+                        weekDays = getWeekDate();
+
+                        customDataLists.add(new CustomRepetitionDataList("", "", "", "", weekDays,false));
+                        customRepetitionAdapter.notifyDataSetChanged();
+                        addMoreCustom.setVisibility(View.VISIBLE);
+                        bottomSheetPicker.dismiss();
+                        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+                    }
+                    else {
+                        Toast.makeText(AddGeoFences.this, "Please Select Week Range", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (dateRangeSwitch.isChecked() && !timeRangeSwitch.isChecked() && weekRangeSwitch.isChecked()) {
+                    Toast.makeText(AddGeoFences.this, "Please Select Only Date or Week Range", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(AddGeoFences.this, "Please Select At least Week, Date or Time Range", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else {
+                if (dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked() && !weekRangeSwitch.isChecked()) {
                     if (!start_date.isEmpty() && !end_date.isEmpty() && !start_time.isEmpty() && !end_time.isEmpty()) {
 
                         Calendar calendar = Calendar.getInstance();
@@ -861,6 +1179,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                                 customDataLists.get(selectedPosition).setEnd_date(end_date);
                                 customDataLists.get(selectedPosition).setBegin_time(start_time);
                                 customDataLists.get(selectedPosition).setEnd_time(end_time);
+                                customDataLists.get(selectedPosition).setWeeklyDays("");
                                 customRepetitionAdapter.notifyDataSetChanged();
 
                                 bottomSheetPicker.dismiss();
@@ -874,7 +1193,8 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                     } else {
                         Toast.makeText(AddGeoFences.this, "Please Select Date & Time Range", Toast.LENGTH_SHORT).show();
                     }
-                } else if (dateRangeSwitch.isChecked() && !timeRangeSwitch.isChecked()) {
+                }
+                else if (dateRangeSwitch.isChecked() && !timeRangeSwitch.isChecked() && !weekRangeSwitch.isChecked()) {
                     if (!start_date.isEmpty() && !end_date.isEmpty()) {
 
                         Calendar calendar = Calendar.getInstance();
@@ -916,6 +1236,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                                 customDataLists.get(selectedPosition).setEnd_date(end_date);
                                 customDataLists.get(selectedPosition).setBegin_time("");
                                 customDataLists.get(selectedPosition).setEnd_time("");
+                                customDataLists.get(selectedPosition).setWeeklyDays("");
                                 customRepetitionAdapter.notifyDataSetChanged();
 
                                 bottomSheetPicker.dismiss();
@@ -929,7 +1250,8 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                     } else {
                         Toast.makeText(AddGeoFences.this, "Please Select Date Range", Toast.LENGTH_SHORT).show();
                     }
-                } else if (!dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked()) {
+                }
+                else if (!dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked() && !weekRangeSwitch.isChecked()) {
                     if (!start_time.isEmpty() && !end_time.isEmpty()) {
 
                         int pos = 0;
@@ -954,6 +1276,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                         customDataLists.get(selectedPosition).setEnd_date("");
                         customDataLists.get(selectedPosition).setBegin_time(start_time);
                         customDataLists.get(selectedPosition).setEnd_time(end_time);
+                        customDataLists.get(selectedPosition).setWeeklyDays("");
                         customRepetitionAdapter.notifyDataSetChanged();
 
                         bottomSheetPicker.dismiss();
@@ -961,7 +1284,83 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                     } else {
                         Toast.makeText(AddGeoFences.this, "Please Select Time Range", Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                }
+                else if (!dateRangeSwitch.isChecked() && timeRangeSwitch.isChecked() && weekRangeSwitch.isChecked()) {
+                    boolean anyEnabled = sunEnabled || monEnabled || tueEnabled || wedEnabled || thuEnabled || friEnabled || satEnabled;
+                    if (anyEnabled && !start_time.isEmpty() && !end_time.isEmpty()) {
+
+                        int pos = 0;
+                        for (int i = 0; i < repetitionLists.size(); i++) {
+                            if (repetitionLists.get(i).getId().equals("3")) {
+                                pos = i;
+                            }
+                        }
+                        repetition_type_id = "3";
+                        repetition_type_name = repetitionLists.get(pos).getName();
+
+                        for (int i = 0; i < repetitionLists.size(); i++) {
+                            repetitionLists.get(i).setClicked(false);
+                        }
+
+                        repetitionLists.get(pos).setClicked(true);
+
+                        repetitionType.setText(repetition_type_name);
+                        customLay.setVisibility(View.VISIBLE);
+                        weekDays = getWeekDate();
+//                        String cd = "From  " + start_time + "  to  " + end_time;
+                        customDataLists.get(selectedPosition).setBegin_date("");
+                        customDataLists.get(selectedPosition).setEnd_date("");
+                        customDataLists.get(selectedPosition).setBegin_time(start_time);
+                        customDataLists.get(selectedPosition).setEnd_time(end_time);
+                        customDataLists.get(selectedPosition).setWeeklyDays(weekDays);
+                        customRepetitionAdapter.notifyDataSetChanged();
+
+                        bottomSheetPicker.dismiss();
+                        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+                    } else {
+                        Toast.makeText(AddGeoFences.this, "Please Select Week & Time Range", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (!dateRangeSwitch.isChecked() && !timeRangeSwitch.isChecked() && weekRangeSwitch.isChecked()) {
+                    boolean anyEnabled = sunEnabled || monEnabled || tueEnabled || wedEnabled || thuEnabled || friEnabled || satEnabled;
+                    if (anyEnabled) {
+
+                        int pos = 0;
+                        for (int i = 0; i < repetitionLists.size(); i++) {
+                            if (repetitionLists.get(i).getId().equals("3")) {
+                                pos = i;
+                            }
+                        }
+                        repetition_type_id = "3";
+                        repetition_type_name = repetitionLists.get(pos).getName();
+
+                        for (int i = 0; i < repetitionLists.size(); i++) {
+                            repetitionLists.get(i).setClicked(false);
+                        }
+
+                        repetitionLists.get(pos).setClicked(true);
+
+                        repetitionType.setText(repetition_type_name);
+                        customLay.setVisibility(View.VISIBLE);
+                        weekDays = getWeekDate();
+//                        String cd = "From  " + start_time + "  to  " + end_time;
+                        customDataLists.get(selectedPosition).setBegin_date("");
+                        customDataLists.get(selectedPosition).setEnd_date("");
+                        customDataLists.get(selectedPosition).setBegin_time("");
+                        customDataLists.get(selectedPosition).setEnd_time("");
+                        customDataLists.get(selectedPosition).setWeeklyDays(weekDays);
+                        customRepetitionAdapter.notifyDataSetChanged();
+
+                        bottomSheetPicker.dismiss();
+                        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+                    } else {
+                        Toast.makeText(AddGeoFences.this, "Please Select Week Range", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (dateRangeSwitch.isChecked() && !timeRangeSwitch.isChecked() && weekRangeSwitch.isChecked()) {
+                    Toast.makeText(AddGeoFences.this, "Please Select Only Date or Week Range", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     Toast.makeText(AddGeoFences.this, "Please Select At least Date or Time Range", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1042,6 +1441,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
                                 if (ff) {
                                     Toast.makeText(this, "Your Custom Date range has gone before today's date. Please select your Date again", Toast.LENGTH_LONG).show();
                                 } else {
+                                    System.out.println("UP First");
                                     newEnableUpGps();
                                 }
                             } else {
@@ -1564,6 +1964,34 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
 
     public void showPicker(int pos) {
         if (pos == -1) {
+            weekRangeEnabled = false;
+            sunEnabled = false;
+            monEnabled = false;
+            tueEnabled = false;
+            wedEnabled = false;
+            thuEnabled = false;
+            friEnabled = false;
+            satEnabled = false;
+            sunCard.setCardBackgroundColor(getColor(R.color.white));
+            sunText.setTextColor(getColor(R.color.belize_hole));
+            monCard.setCardBackgroundColor(getColor(R.color.white));
+            monText.setTextColor(getColor(R.color.belize_hole));
+            tueCard.setCardBackgroundColor(getColor(R.color.white));
+            tueText.setTextColor(getColor(R.color.belize_hole));
+            wedCard.setCardBackgroundColor(getColor(R.color.white));
+            wedText.setTextColor(getColor(R.color.belize_hole));
+            thuCard.setCardBackgroundColor(getColor(R.color.white));
+            thuText.setTextColor(getColor(R.color.belize_hole));
+            friCard.setCardBackgroundColor(getColor(R.color.white));
+            friText.setTextColor(getColor(R.color.belize_hole));
+            satCard.setCardBackgroundColor(getColor(R.color.white));
+            satText.setTextColor(getColor(R.color.belize_hole));
+
+            weekRangeSwitch.setChecked(false);
+            allWeekCheckBox.setChecked(false);
+            allWeekCheckBox.setVisibility(View.GONE);
+            weekLayout.setVisibility(View.GONE);
+
             dateRangeEnabled = true;
             timeRangeEnabled = true;
             dateRangeSwitch.setChecked(true);
@@ -1593,14 +2021,36 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
             end_date = customDataLists.get(pos).getEnd_date();
             start_time = customDataLists.get(pos).getBegin_time();
             end_time = customDataLists.get(pos).getEnd_time();
+            weekDays = customDataLists.get(pos).getWeeklyDays();
 
+            String[] daysArray = weekDays.split(",");
+            ArrayList<String> daysList = new ArrayList<>(Arrays.asList(daysArray));
+
+            sunEnabled = getDateChecker(daysList,"Sunday");
+            monEnabled = getDateChecker(daysList,"Monday");
+            tueEnabled = getDateChecker(daysList,"Tuesday");
+            wedEnabled = getDateChecker(daysList,"Wednesday");
+            thuEnabled = getDateChecker(daysList,"Thursday");
+            friEnabled = getDateChecker(daysList,"Friday");
+            satEnabled = getDateChecker(daysList,"Saturday");
+
+            weekRangeEnabled = sunEnabled || monEnabled || tueEnabled || wedEnabled || thuEnabled || friEnabled || satEnabled;
             dateRangeEnabled = !start_date.isEmpty() || !end_date.isEmpty();
             timeRangeEnabled = !start_time.isEmpty() || !end_time.isEmpty();
+
+            weekRangeSwitch.setChecked(weekRangeEnabled);
+            allWeekCheckBox.setVisibility(weekRangeEnabled ? View.VISIBLE : View.GONE);
+            weekLayout.setVisibility(weekRangeEnabled ? View.VISIBLE : View.GONE);
+            allWeekCheckBox.setChecked(sunEnabled && monEnabled && tueEnabled && wedEnabled && thuEnabled && friEnabled && satEnabled);
+
             dateRangeSwitch.setChecked(dateRangeEnabled);
             timeRangeSwitch.setChecked(timeRangeEnabled);
             dateRangLayout.setEnabled(dateRangeEnabled);
             timeRangeLayout.setVisibility(timeRangeEnabled ? View.VISIBLE : View.GONE);
 
+            if (weekRangeEnabled) {
+                checkDayActiveness();
+            }
             if (dateRangeEnabled) {
                 if (!start_date.isEmpty() && !end_date.isEmpty()) {
                     String dateRange = start_date + " --- " + end_date;
@@ -1667,6 +2117,15 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         conn = false;
         connected = false;
         loading = true;
+        boolean geoF = false;
+        int f_count = Integer.parseInt(free_event_count);
+        if (total_free_used < f_count) {
+            geoF = true;
+        }
+
+        int sl = total_count + 1;
+
+        boolean subAcv = userInfoLists.get(0).getP_subscribed().equalsIgnoreCase("yes");
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -1690,9 +2149,12 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         geoFences.put(KEY_GEO_TRIGGER_TYPE_NAME, triggering_type_name);
         geoFences.put(KEY_GEO_REPEAT_ID, repetition_type_id);
         geoFences.put(KEY_GEO_REPEAT_NAME, repetition_type_name);
-        geoFences.put(KEY_GEO_USER_NAME, userInfoLists.get(0).getP_phone());
+        geoFences.put(KEY_GEO_USER_NAME, userInfoLists.get(0).getP_email());
         geoFences.put(KEY_GEO_IS_ACTIVE, true);
         geoFences.put(KEY_GEO_UPDATE_DATE, Calendar.getInstance().getTime());
+        geoFences.put(KEY_GEO_IS_FREE, geoF);
+        geoFences.put(KEY_GEO_SL, String.valueOf(sl));
+        geoFences.put(KEY_GEO_SUB_ACTIVE, subAcv);
 
         database.collection(KEY_LOC_TABLE_NAME)
                 .add(geoFences)
@@ -1719,7 +2181,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         for (int x = 0; x < customDataLists.size(); x++) {
             allUpdated = customDataLists.get(x).isUpdated();
             if (!customDataLists.get(x).isUpdated()) {
-                saveCustomDate(x, id);
+                saveCustomDate(x, id, type);
                 break;
             }
         }
@@ -1735,7 +2197,7 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void saveCustomDate(int index, String id) {
+    private void saveCustomDate(int index, String id, String type) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
         HashMap<String, Object> customRepeatData = new HashMap<>();
@@ -1745,16 +2207,17 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         customRepeatData.put(KEY_GEO_REPEAT_END_DATE, customDataLists.get(index).getEnd_date());
         customRepeatData.put(KEY_GEO_REPEAT_BEGIN_TIME, customDataLists.get(index).getBegin_time());
         customRepeatData.put(KEY_GEO_REPEAT_END_TIME, customDataLists.get(index).getEnd_time());
+        customRepeatData.put(KEY_GEO_REPEAT_WEEK_DAY, customDataLists.get(index).getWeeklyDays());
 
         database.collection(KEY_GEO_TIME_TABLE_NAME)
                 .add(customRepeatData)
                 .addOnSuccessListener(documentReference -> {
                     customDataLists.get(index).setUpdated(true);
-                    checkToInsertCustomDate(id, "1");
+                    checkToInsertCustomDate(id, type);
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to insert. Retrying...", Toast.LENGTH_SHORT).show();
-                    checkToInsertCustomDate(id, "1");
+                    checkToInsertCustomDate(id, type);
                 });
     }
 
@@ -1998,9 +2461,12 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         geoFences.put(KEY_GEO_TRIGGER_TYPE_NAME, triggering_type_name);
         geoFences.put(KEY_GEO_REPEAT_ID, repetition_type_id);
         geoFences.put(KEY_GEO_REPEAT_NAME, repetition_type_name);
-        geoFences.put(KEY_GEO_USER_NAME, userInfoLists.get(0).getP_phone());
+        geoFences.put(KEY_GEO_USER_NAME, userInfoLists.get(0).getP_email());
         geoFences.put(KEY_GEO_IS_ACTIVE, true);
         geoFences.put(KEY_GEO_UPDATE_DATE, Calendar.getInstance().getTime());
+        geoFences.put(KEY_GEO_IS_FREE, savedGeoFree);
+        geoFences.put(KEY_GEO_SL, savedSlNo);
+        geoFences.put(KEY_GEO_SUB_ACTIVE, savedSubAcv);
 
         database.collection(KEY_LOC_TABLE_NAME).whereEqualTo(KEY_LOC_ID,geo_id)
                 .get()
@@ -2110,5 +2576,132 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         alert.setCancelable(false);
         alert.setCanceledOnTouchOutside(false);
         alert.show();
+    }
+
+    public String getWeekDate() {
+        String weeks = "";
+        if (sunEnabled) {
+            weeks = "Sunday";
+        }
+        if (monEnabled) {
+            if (weeks.isEmpty()) {
+                weeks = "Monday";
+            }
+            else {
+                weeks = weeks+",Monday";
+            }
+        }
+        if (tueEnabled) {
+            if (weeks.isEmpty()) {
+                weeks = "Tuesday";
+            }
+            else {
+                weeks = weeks+",Tuesday";
+            }
+        }
+        if (wedEnabled) {
+            if (weeks.isEmpty()) {
+                weeks = "Wednesday";
+            }
+            else {
+                weeks = weeks+",Wednesday";
+            }
+        }
+        if (thuEnabled) {
+            if (weeks.isEmpty()) {
+                weeks = "Thursday";
+            }
+            else {
+                weeks = weeks+",Thursday";
+            }
+        }
+        if (friEnabled) {
+            if (weeks.isEmpty()) {
+                weeks = "Friday";
+            }
+            else {
+                weeks = weeks+",Friday";
+            }
+        }
+        if (satEnabled) {
+            if (weeks.isEmpty()) {
+                weeks = "Saturday";
+            }
+            else {
+                weeks = weeks+",Saturday";
+            }
+        }
+
+        return weeks;
+    }
+
+    public boolean getDateChecker(ArrayList<String> days, String day) {
+        boolean found = false;
+        for (int i = 0; i < days.size(); i++) {
+            if (days.get(i).equalsIgnoreCase(day)) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
+
+    public void checkDayActiveness() {
+        if (sunEnabled) {
+            sunCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+            sunText.setTextColor(getColor(R.color.white));
+        }
+        else {
+            sunCard.setCardBackgroundColor(getColor(R.color.white));
+            sunText.setTextColor(getColor(R.color.belize_hole));
+        }
+        if (monEnabled) {
+            monCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+            monText.setTextColor(getColor(R.color.white));
+        }
+        else {
+            monCard.setCardBackgroundColor(getColor(R.color.white));
+            monText.setTextColor(getColor(R.color.belize_hole));
+        }
+        if (tueEnabled) {
+            tueCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+            tueText.setTextColor(getColor(R.color.white));
+        }
+        else {
+            tueCard.setCardBackgroundColor(getColor(R.color.white));
+            tueText.setTextColor(getColor(R.color.belize_hole));
+        }
+        if (wedEnabled) {
+            wedCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+            wedText.setTextColor(getColor(R.color.white));
+        }
+        else {
+            wedCard.setCardBackgroundColor(getColor(R.color.white));
+            wedText.setTextColor(getColor(R.color.belize_hole));
+        }
+        if (thuEnabled) {
+            thuCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+            thuText.setTextColor(getColor(R.color.white));
+        }
+        else {
+            thuCard.setCardBackgroundColor(getColor(R.color.white));
+            thuText.setTextColor(getColor(R.color.belize_hole));
+        }
+        if (friEnabled) {
+            friCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+            friText.setTextColor(getColor(R.color.white));
+        }
+        else {
+            friCard.setCardBackgroundColor(getColor(R.color.white));
+            friText.setTextColor(getColor(R.color.belize_hole));
+        }
+        if (satEnabled) {
+            satCard.setCardBackgroundColor(getColor(R.color.belize_hole));
+            satText.setTextColor(getColor(R.color.white));
+        }
+        else {
+            satCard.setCardBackgroundColor(getColor(R.color.white));
+            satText.setTextColor(getColor(R.color.belize_hole));
+        }
     }
 }

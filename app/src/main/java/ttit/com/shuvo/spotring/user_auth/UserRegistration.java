@@ -365,25 +365,24 @@ public class UserRegistration extends AppCompatActivity {
     }
     public void registerUser() {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
+        String is_subscribed = "No";
         HashMap<String , Object> user = new HashMap<>();
-
-//        HashMap<String, Object> locs = new HashMap<>();
-
         user.put(KEY_USER_NAME, name);
         user.put(KEY_USER_EMAIL, email);
         user.put(KEY_USER_PHONE, phone != null ? phone : "");
         user.put(KEY_USER_PASSWORD, pass);
-        user.put(KEY_USER_SUBSCRIBE, "No");
-        user.put(KEY_USER_EVENT_COUNT, "5");
-
-//        locs.put("Latitude",23.792535);
-//        locs.put("Longitude",90.404198);
-//        locs.put(KEY_USER_PHONE, phone);
+        user.put(KEY_USER_SUBSCRIBE, is_subscribed);
+        user.put(KEY_USER_PRODUCT_ID, "");
+        user.put(KEY_USER_P_TOKEN, "");
+        user.put(KEY_USER_SUB_EXPIRE_DATE, "");
+        user.put(KEY_USER_SUB_EXPIRE_M_SECONDS, "");
 
         database.collection(KEY_USER_TABLE_NAME)
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(UserRegistration.this, "Registration success. Please Login to continue.", Toast.LENGTH_SHORT).show();
+                    binding.registrationCardView.setVisibility(View.VISIBLE);
+                    binding.progressIndicatorRegistration.setVisibility(View.GONE);
                     finish();
                 })
                 .addOnFailureListener(e -> {
@@ -391,18 +390,6 @@ public class UserRegistration extends AppCompatActivity {
                     binding.progressIndicatorRegistration.setVisibility(View.GONE);
                     Toast.makeText(UserRegistration.this, "Registration failed. Please try again", Toast.LENGTH_SHORT).show();
                 });
-
-//        database.collection("geoFences")
-//                .add(locs)
-//                .addOnSuccessListener(reference -> {
-//                    Toast.makeText(UserRegistration.this, "Registration success. Please Sign In to continue.", Toast.LENGTH_SHORT).show();
-//                    finish();
-//                })
-//                .addOnFailureListener(e -> {
-//                    binding.registrationCardView.setVisibility(View.VISIBLE);
-//                    binding.progressIndicatorRegistration.setVisibility(View.GONE);
-//                    Toast.makeText(UserRegistration.this, "Registration failed. Please try again", Toast.LENGTH_SHORT).show();
-//                });
 
     }
 }

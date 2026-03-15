@@ -14,9 +14,15 @@ public class Constants {
     public static final String KEY_USER_PHONE = "user_mobile";
     public static final String KEY_USER_PASSWORD = "user_password";
     public static final String KEY_USER_SUBSCRIBE = "user_subscribed";
-    public static final String KEY_USER_EVENT_COUNT = "user_event_count";
+    public static final String KEY_USER_PRODUCT_ID = "user_subscription_product";
+    public static final String KEY_USER_P_TOKEN = "user_subs_p_token";
+    public static final String KEY_USER_SUB_EXPIRE_DATE = "user_subs_expire_date";
+    public static final String KEY_USER_SUB_EXPIRE_M_SECONDS = "user_subs_expire_milliseconds";
     public static final String KEY_USER_ID = "KEY_USER_ID";
     public static final String LOGIN_TF = "TRUE_FALSE";
+
+    public static final String KEY_GEO_PACK_FREE_COUNT = "geo_free_event";
+    public static final String KEY_GEO_EVENT_COUNT = "event_count";
 
     public static final String KEY_LOC_TABLE_NAME = "geoFences";
     public static final String KEY_LOC_ID = "geo_id";
@@ -36,6 +42,9 @@ public class Constants {
     public static final String KEY_GEO_REPEAT_NAME = "geo_repeat_name";
     public static final String KEY_GEO_USER_NAME = "geo_user_name";
     public static final String KEY_GEO_IS_ACTIVE = "geo_is_active";
+    public static final String KEY_GEO_IS_FREE = "geo_is_free";
+    public static final String KEY_GEO_SL = "geo_sl_no";
+    public static final String KEY_GEO_SUB_ACTIVE = "geo_subscribe_active";
     public static final String KEY_GEO_UPDATE_DATE = "geo_update_date";
 
     public static final String KEY_GEO_TIME_TABLE_NAME = "geo_custom_time";
@@ -44,8 +53,12 @@ public class Constants {
     public static final String KEY_GEO_REPEAT_END_DATE = "geo_repeat_end_date";
     public static final String KEY_GEO_REPEAT_BEGIN_TIME = "geo_repeat_begin_time";
     public static final String KEY_GEO_REPEAT_END_TIME = "geo_repeat_end_time";
+    public static final String KEY_GEO_REPEAT_WEEK_DAY = "geo_repeat_week_day";
 
     public static final String KEY_EVENT_TABLE_NAME = "event_type_mst";
     public static final String KEY_EVENT_TYPE_ID = "type_id";
     public static final String KEY_EVENT_TYPE_NAME = "type_name";
+
+    public static final String SUB_MONTHLY_ID = "spotring_pro_monthly";
+    public static final String SUB_YEARLY_ID  = "spotring_pro_yearly";
 }

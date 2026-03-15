@@ -190,21 +190,51 @@
                 android:layout_weight="4"
                 android:orientation="vertical">
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="SAVED LOCATIONS"
-                    android:layout_margin = "@dimen/_8sdp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:textSize="@dimen/_14sdp"
-                    android:textColor="@color/peter_river"
-                    tools:ignore="HardcodedText" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="SAVED EVENTS"
+                        android:layout_margin = "@dimen/_8sdp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textSize="@dimen/_14sdp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="1dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/subscription_icon"
+                        android:textColor="@color/peter_river"
+                        tools:ignore="HardcodedText" />
+
+                    <FrameLayout
+                        android:id="@+id/subscription_icon"
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="@dimen/_25sdp"
+                        android:background="@drawable/icon_gradient_bg"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_8sdp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="4dp"
+                            android:src="@drawable/subscription"
+                            app:tint="@android:color/white"
+                            tools:ignore="ContentDescription" />
+
+                    </FrameLayout>
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/no_location_found_msg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No Location saved yet"
+                    android:text="No event saved yet"
                     android:layout_margin = "@dimen/_8sdp"
                     android:fontFamily="@font/poppins_bold"
                     android:gravity="center"

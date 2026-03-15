@@ -26,6 +26,9 @@
         android:theme="@style/Theme.SpotRing"
         tools:targetApi="33">
         <activity
+            android:name=".subscription.SubscriptionPack"
+            android:exported="false" />
+        <activity
             android:name=".permission_checker.AllPermissionScreen"
             android:exported="false" />
         <activity

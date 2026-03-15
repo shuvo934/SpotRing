@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".subscription.SubscriptionPack">
+
+    <RelativeLayout
+        android:id="@+id/subscription_full_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:id="@+id/app_bar_subscription"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="@dimen/_46sdp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/custom_app_bar_design_revert"/>
+
+            <ImageView
+                android:id="@+id/back_icon_subscription"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:src="@drawable/arrow_back"
+                app:tint="@color/belize_hole"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/app_icon_geo_fences"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:src="@drawable/spotring_icon_new"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:paddingTop="@dimen/_4sdp"
+                android:paddingBottom="@dimen/_1sdp"
+                android:gravity="center"
+                android:layout_toEndOf="@+id/back_icon_subscription"
+                android:layout_toStartOf="@+id/app_icon_geo_fences"
+                android:fontFamily="@font/poppins_bold"
+                android:text="UPGRADE TO PRO"
+                android:textColor="@color/belize_hole"
+                android:textSize="@dimen/_14sdp"
+                tools:ignore="HardcodedText" />
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/app_bar_subscription"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/_4sdp">
+
+                <TextView
+                    android:id="@+id/tvSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Free users can create up to 5 alarms. Subscribe to unlock more."
+                    android:textSize="@dimen/_11sdp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textColor="@color/belize_hole"
+                    android:layout_margin="@dimen/_8sdp"
+                    android:background="#E3F2FD"
+                    android:gravity="center"
+                    android:padding="8sp"
+                    tools:ignore="HardcodedText" />
+
+                <!-- Feature list -->
+                <!--            <LinearLayout-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:orientation="vertical"-->
+                <!--                android:paddingBottom="12dp">-->
+
+                <!--                <TextView-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="✅ Create unlimited alarms"-->
+                <!--                    android:textSize="14sp"-->
+                <!--                    android:paddingTop="4dp" />-->
+
+                <!--                <TextView-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="✅ Priority alerts & reminders"-->
+                <!--                    android:textSize="14sp"-->
+                <!--                    android:paddingTop="4dp" />-->
+
+                <!--                <TextView-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="✅ Backup/restore settings (optional)"-->
+                <!--                    android:textSize="14sp"-->
+                <!--                    android:paddingTop="4dp" />-->
+                <!--            </LinearLayout>-->
+
+                <!-- FREE plan -->
+                <!--            <com.google.android.material.card.MaterialCardView-->
+                <!--                android:id="@+id/cardFree"-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                app:cardCornerRadius="@dimen/_12sdp"-->
+                <!--                app:cardElevation="@dimen/_2sdp"-->
+                <!--                android:layout_margin="@dimen/_8sdp"-->
+                <!--                app:strokeWidth="1dp"-->
+                <!--                app:strokeColor="@color/belize_hole">-->
+
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:orientation="vertical"-->
+                <!--                    android:padding="@dimen/_12sdp">-->
+
+                <!--                    <TextView-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="Free"-->
+                <!--                        android:textStyle="bold"-->
+                <!--                        android:textSize="@dimen/_12sdp"-->
+                <!--                        android:fontFamily="@font/poppins_bold"-->
+                <!--                        android:textColor="@color/black"/>-->
+
+                <!--                    <TextView-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="Up to 5 alarms"-->
+                <!--                        android:alpha="0.85"-->
+                <!--                        android:textColor="@color/default_text_color"-->
+                <!--                        android:fontFamily="@font/poppins_medium"-->
+                <!--                        android:textSize="@dimen/_10sdp"-->
+                <!--                        android:paddingTop="@dimen/_4sdp" />-->
+
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/tvFreeStatus"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="Current plan"-->
+                <!--                        android:fontFamily="@font/poppins_semibold"-->
+                <!--                        android:textSize="@dimen/_10sdp"-->
+                <!--                        android:textColor="@color/belize_hole"-->
+                <!--                        android:paddingTop="@dimen/_8sdp"-->
+                <!--                        android:textStyle="bold"-->
+                <!--                        android:alpha="0.8" />-->
+
+                <!--                </LinearLayout>-->
+
+                <!--            </com.google.android.material.card.MaterialCardView>-->
+
+                <!-- MONTHLY plan -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardMonthly"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/_12sdp"
+                    app:cardElevation="@dimen/_2sdp"
+                    android:layout_margin="@dimen/_8sdp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/belize_hole">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_12sdp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Monthly Pro"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/_12sdp"
+                            android:fontFamily="@font/poppins_bold"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/tvMonthlyPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="$3 / month"
+                            android:textSize="@dimen/_14sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/belize_hole"
+                            android:fontFamily="@font/poppins_bold"
+                            android:paddingTop="@dimen/_4sdp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Up to 100 alarms • Cancel anytime"
+                            android:alpha="0.85"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="@dimen/_10sdp"
+                            android:textColor="@color/default_text_color"
+                            android:paddingTop="@dimen/_3sdp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMonthly"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Subscribe Monthly"
+                            android:fontFamily="@font/poppins_bold"
+                            android:paddingTop="@dimen/_2sdp"
+                            android:paddingBottom="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            app:cornerRadius="@dimen/_12sdp" />
+
+                        <TextView
+                            android:id="@+id/monthly_expired_date_after_activation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Expired in 30 MAR, 2026"
+                            android:gravity="center"
+                            android:visibility="gone"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="@dimen/_10sdp"
+                            android:textColor="@color/default_text_color"
+                            android:paddingTop="@dimen/_3sdp" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- YEARLY plan (Best value) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardYearly"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/_12sdp"
+                    app:cardElevation="@dimen/_2sdp"
+                    android:layout_margin="@dimen/_8sdp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/belize_hole">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_12sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Yearly Pro"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins_bold"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/tvBestValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="BEST VALUE"
+                                android:textSize="@dimen/_9sdp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/poppins_bold"
+                                android:paddingStart="@dimen/_8sdp"
+                                android:paddingEnd="@dimen/_8sdp"
+                                android:paddingTop="@dimen/_3sdp"
+                                android:paddingBottom="@dimen/_2sdp"
+                                android:background="@drawable/gradient_bg"
+                                android:textColor="@android:color/white" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvYearlyPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="$25 / month"
+                            android:textSize="@dimen/_14sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/belize_hole"
+                            android:fontFamily="@font/poppins_bold"
+                            android:paddingTop="@dimen/_4sdp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Up to 100 alarms • Cancel anytime"
+                            android:alpha="0.85"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="@dimen/_10sdp"
+                            android:textColor="@color/default_text_color"
+                            android:paddingTop="@dimen/_3sdp" />
+
+                        <TextView
+                            android:id="@+id/tvYearlySave"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Save 30% compared to monthly"
+                            android:alpha="0.85"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="@dimen/_10sdp"
+                            android:textColor="@color/default_text_color"
+                            android:paddingTop="@dimen/_3sdp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnYearly"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Subscribe Yearly"
+                            android:fontFamily="@font/poppins_bold"
+                            android:paddingTop="@dimen/_2sdp"
+                            android:paddingBottom="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            app:cornerRadius="@dimen/_12sdp" />
+
+                        <TextView
+                            android:id="@+id/yearly_expired_date_after_activation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Expired in 30 MAR, 2026"
+                            android:gravity="center"
+                            android:visibility="gone"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="@dimen/_10sdp"
+                            android:textColor="@color/default_text_color"
+                            android:paddingTop="@dimen/_3sdp" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Restore / Manage -->
+                <!--            <LinearLayout-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:orientation="vertical"-->
+                <!--                android:paddingTop="14dp"-->
+                <!--                android:paddingBottom="6dp">-->
+
+                <!--                <TextView-->
+                <!--                    android:id="@+id/tvRestore"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="Restore purchase"-->
+                <!--                    android:textStyle="bold"-->
+                <!--                    android:paddingTop="6dp" />-->
+
+                <!--                <TextView-->
+                <!--                    android:id="@+id/tvPolicy"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="Subscriptions are managed by Google Play. Cancel anytime from Play Store."-->
+                <!--                    android:textSize="12sp"-->
+                <!--                    android:alpha="0.75"-->
+                <!--                    android:paddingTop="8dp" />-->
+                <!--            </LinearLayout>-->
+
+            </LinearLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_indicator_subscription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"
+        android:layout_gravity="center"/>
+
+
+</RelativeLayout>
