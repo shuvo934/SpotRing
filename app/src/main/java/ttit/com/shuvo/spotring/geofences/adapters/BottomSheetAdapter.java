@@ -82,7 +82,11 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<BottomSheetAdapter.
 
         @Override
         public void onClick(View view) {
-            mClickedItem.onItemClicked(getAdapterPosition(), type);
+            int position = getBindingAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
+            mClickedItem.onItemClicked(position, type);
         }
     }
 

@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
@@ -22,6 +24,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -29,7 +34,6 @@ import ttit.com.shuvo.spotring.dashboard.HomePage;
 import ttit.com.shuvo.spotring.databinding.ActivityAllPermissionScreenBinding;
 import ttit.com.shuvo.spotring.user_auth.UserLogin;
 
-@RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
 public class AllPermissionScreen extends AppCompatActivity {
 
     private ActivityAllPermissionScreenBinding binding;
@@ -47,9 +51,22 @@ public class AllPermissionScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getWindow().setNavigationBarContrastEnforced(false);
+        }
         binding = ActivityAllPermissionScreenBinding.inflate(getLayoutInflater());
-        View v = binding.getRoot();
-        setContentView(v);
+        View view = binding.getRoot();
+        setContentView(view);
+        View navScrim = binding.navBarPermissionScreen;
+        ViewCompat.setOnApplyWindowInsetsListener(binding.permissionCheckRoot, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            ViewGroup.LayoutParams lp = navScrim.getLayoutParams();
+            lp.height = systemBars.bottom;
+            navScrim.setLayoutParams(lp);
+            return insets;
+        });
 
         os_version = Build.VERSION.SDK_INT;
         sharedPreferences = getSharedPreferences(LOGIN_ACTIVITY_FILE,MODE_PRIVATE);
@@ -95,7 +112,9 @@ public class AllPermissionScreen extends AppCompatActivity {
                             "Please select 'Allow' when prompted for notification permission")
                     .setPositiveButton("Continue", (dialog, which) -> {
                         dialog.dismiss();
-                        enableNotification();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            enableNotification();
+                        }
                     })
                     .setNegativeButton("Cancel",(dialog, which) -> dialog.dismiss());
 
@@ -307,11 +326,15 @@ public class AllPermissionScreen extends AppCompatActivity {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
 
             Log.i("Ekhane", "15");
-            backLocationResultLauncher.launch(new String[]{android.Manifest.permission.ACCESS_BACKGROUND_LOCATION});
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                backLocationResultLauncher.launch(new String[]{android.Manifest.permission.ACCESS_BACKGROUND_LOCATION});
+            }
         }
         else {
             Log.i("Ekhane", "16");
-            backLocationResultLauncher.launch(new String[]{android.Manifest.permission.ACCESS_BACKGROUND_LOCATION});
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                backLocationResultLauncher.launch(new String[]{android.Manifest.permission.ACCESS_BACKGROUND_LOCATION});
+            }
         }
     }
 
@@ -376,7 +399,9 @@ public class AllPermissionScreen extends AppCompatActivity {
             }
             else {
                 System.out.println("HOLA10");
-                enableNotification();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    enableNotification();
+                }
             }
         }
     });

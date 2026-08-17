@@ -6,21 +6,25 @@ plugins {
 
 android {
     namespace 'ttit.com.shuvo.spotring'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "ttit.com.shuvo.spotring"
         minSdk 24
-        targetSdk 35
-        versionCode 8
-        versionName "1.0.7"
+        targetSdk 36
+        versionCode 9
+        versionName "1.0.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            shrinkResources false
+        }
+        release {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -30,6 +34,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -58,10 +63,6 @@ dependencies {
     // crop image
 //    implementation libs.ucrop
 
-    // Image View
-    implementation libs.circleimageview
-    implementation libs.glide
-    annotationProcessor libs.compiler
 
     // Google Sign in
     implementation(libs.firebase.auth)

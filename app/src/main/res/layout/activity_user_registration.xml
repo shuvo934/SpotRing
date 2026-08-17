@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:fitsSystemWindows="true"
+    android:id="@+id/registration_root"
     android:background="@drawable/back_design_spotring_new"
     tools:context=".user_auth.UserRegistration">
 

@@ -64,8 +64,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -75,6 +74,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -84,7 +84,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -202,14 +204,22 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(HomePage.this, R.color.white));
-
+        EdgeToEdge.enable(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getWindow().setNavigationBarContrastEnforced(false);
+        }
         ActivityHomePageBinding binding = ActivityHomePageBinding.inflate(getLayoutInflater());
-        View v = binding.getRoot();
-        setContentView(v);
+        View relativeLayout = binding.getRoot();
+        setContentView(relativeLayout);
+        View navScrim = binding.navBarHomeRoot;
+        ViewCompat.setOnApplyWindowInsetsListener(binding.homePageRoot, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            ViewGroup.LayoutParams lp = navScrim.getLayoutParams();
+            lp.height = systemBars.bottom;
+            navScrim.setLayoutParams(lp);
+            return insets;
+        });
 
         fullLayout = binding.homePageFullLayout;
         circularProgressIndicator = binding.progressIndicatorHomepage;
@@ -244,6 +254,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
         locationView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         locationView.setLayoutManager(layoutManager);
+        locationView.addRecyclerListener(mRecycleListener);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -1168,7 +1179,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
                                         getLocationDataDetails();
                                     }
                                 } else {
-                                    Toast.makeText(this, "API Error", Toast.LENGTH_LONG).show();
+//                                    Toast.makeText(this, "API Error", Toast.LENGTH_LONG).show();
                                     getLocationDataDetails();
                                 }
                             }
@@ -1471,7 +1482,6 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
 
                 savedLocationAdapter = new SavedLocationAdapter(savedLocationLists,HomePage.this, HomePage.this,HomePage.this, HomePage.this, HomePage.this);
                 locationView.setAdapter(savedLocationAdapter);
-                locationView.setRecyclerListener(mRecycleListener);
 
                 mMap.clear();
                 for (int i = 0; i < savedLocationLists.size(); i++) {
@@ -1540,7 +1550,7 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        int action = event.getAction();
+        int action = event.getActionMasked();
         if (action == MotionEvent.ACTION_DOWN) {
             downRawX = event.getRawX();
             downRawY = event.getRawY();
@@ -1549,26 +1559,53 @@ public class HomePage extends AppCompatActivity implements OnMapReadyCallback, V
             return true; // Consumed
         }
         else if (action == MotionEvent.ACTION_MOVE) {
+            View viewParent = (View)v.getParent();
+            View rootView = v.getRootView();
+
             int viewWidth = v.getWidth();
             int viewHeight = v.getHeight();
 
-            View viewParent = (View)v.getParent();
             int parentWidth = viewParent.getWidth();
             int parentHeight = viewParent.getHeight();
 
+            Insets systemInsets = Insets.NONE;
+            WindowInsetsCompat windowInsets = ViewCompat.getRootWindowInsets(v);
+            if (windowInsets != null) {
+                systemInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            }
+            int[] parentLocation = new int[2];
+            int[] rootLocation = new int[2];
+
+            viewParent.getLocationInWindow(parentLocation);
+            rootView.getLocationInWindow(rootLocation);
+
+            float safeLeftInWindow = rootLocation[0] + systemInsets.left;
+            float safeTopInWindow = rootLocation[1] + systemInsets.top;
+            float safeRightInWindow = rootLocation[0] + rootView.getWidth() - systemInsets.right;
+            float safeBottomInWindow = rootLocation[1] + rootView.getHeight() - systemInsets.bottom;
+
+            float minX = Math.max(viewParent.getPaddingLeft(), safeLeftInWindow - parentLocation[0]);
+            float minY = Math.max(viewParent.getPaddingTop(), safeTopInWindow - parentLocation[1]);
+            float maxX = Math.min(parentWidth - viewWidth - viewParent.getPaddingRight(), safeRightInWindow - parentLocation[0] - viewWidth);
+            float maxY = Math.min(parentHeight - viewHeight - viewParent.getPaddingBottom(), safeBottomInWindow - parentLocation[1] - viewHeight);
+
+            maxX = Math.max(minX, maxX);
+            maxY = Math.max(minY, maxY);
+
             float newX = event.getRawX() + dX;
-            newX = Math.max(0, newX); // Don't allow the FAB past the left hand side of the parent
-            newX = Math.min(parentWidth - viewWidth, newX); // Don't allow the FAB past the right hand side of the parent
-
             float newY = event.getRawY() + dY;
-            newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
-            newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
 
-            v.animate()
-                    .x(newX)
-                    .y(newY)
-                    .setDuration(0)
-                    .start();
+//            newX = Math.max(0, newX); // Don't allow the FAB past the left hand side of the parent
+//            newX = Math.min(parentWidth - viewWidth, newX); // Don't allow the FAB past the right hand side of the parent
+//
+//
+//            newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
+//            newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
+
+            newX = Math.max(minX, Math.min(maxX, newX));
+            newY = Math.max(minY, Math.min(maxY, newY));
+
+            v.animate().x(newX).y(newY).setDuration(0).start();
 
             return true; // Consumed
 

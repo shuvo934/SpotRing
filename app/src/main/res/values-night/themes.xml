@@ -10,7 +10,7 @@
         <item name="colorSecondaryVariant">@color/belize_hole</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" >@color/belize_hole</item>
+        <item name="android:statusBarColor" >@color/white</item>
         <!-- Customize your theme here. -->
         <item name="android:navigationBarColor">@color/concrete</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>

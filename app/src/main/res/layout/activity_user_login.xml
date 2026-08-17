@@ -4,32 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:id="@+id/login_root"
     android:background="@drawable/back_design_spotring_new"
     tools:context=".user_auth.UserLogin">
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical"-->
-<!--        android:weightSum="10"-->
-<!--        android:gravity="bottom"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentTop="true">-->
-
-<!--&lt;!&ndash;        <LinearLayout&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_height="0dp"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_weight="6"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:gravity="bottom"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:background="@drawable/login_design_1"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_gravity="bottom">&ndash;&gt;-->
-
-<!--&lt;!&ndash;        </LinearLayout>&ndash;&gt;-->
-
-<!--    </LinearLayout>-->
 
     <ImageView
         android:id="@+id/spot_ring_logo_image"

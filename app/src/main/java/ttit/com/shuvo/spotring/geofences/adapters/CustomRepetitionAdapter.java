@@ -119,14 +119,22 @@ public class CustomRepetitionAdapter extends RecyclerView.Adapter<CustomRepetiti
             this.mClickedItem = ci;
             itemView.setOnClickListener(this);
             delete.setOnClickListener(view -> {
-                mCategory.remove(getAdapterPosition());
+                int position = getBindingAdapterPosition();
+                if (position == RecyclerView.NO_POSITION) {
+                    return;
+                }
+                mCategory.remove(position);
                 notifyDataSetChanged();
             });
         }
 
         @Override
         public void onClick(View view) {
-            mClickedItem.onItemClicked(getAdapterPosition());
+            int position = getBindingAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
+            mClickedItem.onItemClicked(position);
         }
     }
 

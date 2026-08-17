@@ -190,26 +190,42 @@ public class SavedLocationAdapter extends RecyclerView.Adapter<SavedLocationAdap
 
         @Override
         public void onMapClick(@NonNull LatLng latLng) {
-            clickedMap.onMapClicked(mCategoryItem.get(getAdapterPosition()).getLat(), mCategoryItem.get(getAdapterPosition()).getLng());
+            int position = getBindingAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
+            clickedMap.onMapClicked(mCategoryItem.get(position).getLat(), mCategoryItem.get(position).getLng());
         }
 
         @Override
         public boolean onMarkerClick(@NonNull Marker marker) {
-            clickedMap.onMapClicked(mCategoryItem.get(getAdapterPosition()).getLat(), mCategoryItem.get(getAdapterPosition()).getLng());
+            clickedMap.onMapClicked(mCategoryItem.get(getBindingAdapterPosition()).getLat(), mCategoryItem.get(getBindingAdapterPosition()).getLng());
             return false;
         }
 
         @Override
         public void onClick(View view) {
-            clickedEvent.onEventClicked(getAdapterPosition());
+            int position = getBindingAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
+            clickedEvent.onEventClicked(position);
         }
 
         public void onSwClick(View view) {
-            clickedSwitch.onSwitchClicked(getAdapterPosition(),geoSwitch.isChecked(), geoSwitch);
+            int position = getBindingAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
+            clickedSwitch.onSwitchClicked(position,geoSwitch.isChecked(), geoSwitch);
         }
 
         public void onDeleteClick(View view) {
-            clickedDelete.onDeleteClicked(getAdapterPosition());
+            int position = getBindingAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
+            clickedDelete.onDeleteClicked(position);
         }
     }
 

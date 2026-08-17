@@ -63,7 +63,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
         @Override
         public void onClick(View view) {
-            mClickedItem.onLocationClicked(getAdapterPosition());
+            int position = getBindingAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
+            mClickedItem.onLocationClicked(position);
         }
     }
 

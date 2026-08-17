@@ -44,14 +44,14 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -61,6 +61,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,8 +70,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -288,14 +291,22 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(AddGeoFences.this, R.color.white));
-
+        EdgeToEdge.enable(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getWindow().setNavigationBarContrastEnforced(false);
+        }
         ActivityAddGeoFencesBinding binding = ActivityAddGeoFencesBinding.inflate(getLayoutInflater());
-        View v = binding.getRoot();
-        setContentView(v);
+        View relativeLayout = binding.getRoot();
+        setContentView(relativeLayout);
+        View navScrim = binding.navBarAddEventRoot;
+        ViewCompat.setOnApplyWindowInsetsListener(binding.addEventRoot, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            ViewGroup.LayoutParams lp = navScrim.getLayoutParams();
+            lp.height = systemBars.bottom;
+            navScrim.setLayoutParams(lp);
+            return insets;
+        });
 
         fullLayout = binding.addGeoFencesFullLayout;
         circularProgressIndicator = binding.progressIndicatorAddGeoFences;
@@ -380,7 +391,6 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         customDataLists = new ArrayList<>();
         addMoreCustom.setVisibility(View.GONE);
 
-        customRepetitionView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         customRepetitionView.setLayoutManager(layoutManager);
 
@@ -395,7 +405,6 @@ public class AddGeoFences extends AppCompatActivity implements OnMapReadyCallbac
         bottomSheetrecyclerView = bottomSheetDialog.findViewById(R.id.bottom_sheet_recycler_view);
         bottomSheetlayoutManager = new LinearLayoutManager(AddGeoFences.this);
 
-        bottomSheetrecyclerView.setHasFixedSize(true);
         bottomSheetrecyclerView.setLayoutManager(bottomSheetlayoutManager);
 
         othersBottomSheet = new BottomSheetDialog(AddGeoFences.this);
